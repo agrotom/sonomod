@@ -1,0 +1,9 @@
+item.tungsten_ingot.name=Слиток Вольфрама
+item.guidebook.name=Гайд-бук
+item.onyx.name=Оникс
+
+tile.tungsten_ore.name=Вольфрамовая Руда
+tile.onyx_ore.name=Ониксовая Руда
+
+tile.counter.name=Счётчик
+tile.counter.current=Сейчас: %d

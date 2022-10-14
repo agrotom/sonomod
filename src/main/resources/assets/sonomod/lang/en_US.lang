@@ -1,0 +1,9 @@
+item.tungsten_ingot.name=Tungsten Ingot
+item.guidebook.name=Guide Book
+item.onyx.name=Onyx
+
+tile.tungsten_ore.name=Tungsten Ore
+tile.onyx_ore.name=Onyx Ore
+
+tile.counter.name=Counter
+tile.counter.current=Current: %d
