@@ -1,4 +1,7 @@
-package com.at.sonomod.blocks.tileentity;
+package com.at.sonomod.blocks;
+
+import com.at.sonomod.blocks.tileentity.BlockTileEntity;
+import com.at.sonomod.blocks.tileentity.TileEntityCounter;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +15,7 @@ public class BlockCounter extends BlockTileEntity<TileEntityCounter> {
         super(name, material, soundType);
 
         this.setHarvestLevel("pickaxe", 3);
-        this.setTextureName("Grill");
+        this.setTextureName("grill");
     }
 
     @Override
@@ -52,4 +55,22 @@ public class BlockCounter extends BlockTileEntity<TileEntityCounter> {
         return new TileEntityCounter();
     }
 
+    @Override
+    public int getRenderType()
+    {
+    	return -1;
+    }
+    
+    @Override
+    public boolean isOpaqueCube()
+    {
+    	return false;
+    }
+    
+    @Override
+    public boolean renderAsNormalBlock()
+    {
+    	return false;
+    }
+    
 }

@@ -23,24 +23,6 @@ public abstract class BlockTileEntity<T extends TileEntity> extends BlockBase {
 
         return (T) world.getTileEntity(xPos, yPos, zPos);
     }
-
-    @Override
-    public int getRenderType()
-    {
-    	return -1;
-    }
-    
-    @Override
-    public boolean isOpaqueCube()
-    {
-    	return false;
-    }
-    
-    @Override
-    public boolean renderAsNormalBlock()
-    {
-    	return false;
-    }
     
     @Override
     public boolean hasTileEntity(int metadata) {
