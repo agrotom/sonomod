@@ -1,4 +1,4 @@
-package proxy;
+package com.at.sonomod.proxy;
 
 public class CommonProxy {
 

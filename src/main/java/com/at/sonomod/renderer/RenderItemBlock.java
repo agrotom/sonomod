@@ -2,10 +2,11 @@ package com.at.sonomod.renderer;
 
 import org.lwjgl.opengl.GL11;
 
+import com.at.sonomod.proxy.ClientProxy;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
-import proxy.ClientProxy;
 
 public class RenderItemBlock implements IItemRenderer
 {

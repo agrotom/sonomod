@@ -4,12 +4,13 @@ import org.lwjgl.opengl.GL11;
 
 import com.at.sonomod.SonoMod;
 import com.at.sonomod.blocks.tileentity.GrillTileEntity;
+import com.at.sonomod.proxy.ClientProxy;
+
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
-import proxy.ClientProxy;
 
 public class RenderTileEntity extends TileEntitySpecialRenderer {
 

@@ -1,4 +1,4 @@
-package proxy;
+package com.at.sonomod.proxy;
 
 import org.lwjgl.opengl.GL11;
 

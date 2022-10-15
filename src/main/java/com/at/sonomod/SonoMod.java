@@ -3,6 +3,7 @@ package com.at.sonomod;
 import com.at.sonomod.blocks.ModBlocks;
 import com.at.sonomod.blocks.gens.OreGen;
 import com.at.sonomod.items.ModItems;
+import com.at.sonomod.proxy.ClientProxy;
 import com.at.sonomod.recipes.Recipes;
 
 import cpw.mods.fml.common.Mod;
@@ -12,7 +13,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import proxy.ClientProxy;
 
 @Mod(modid = SonoMod.MODID, version = SonoMod.VERSION)
 public class SonoMod
