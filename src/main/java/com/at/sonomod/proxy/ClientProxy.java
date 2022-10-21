@@ -1,10 +1,12 @@
 package com.at.sonomod.proxy;
 
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
 
 import com.at.sonomod.SonoMod;
 import com.at.sonomod.blocks.ModBlocks;
-import com.at.sonomod.blocks.tileentity.GrillTileEntity;
+import com.at.sonomod.blocks.tileentity.BlockTileEntity;
 import com.at.sonomod.renderer.RenderItemBlock;
 import com.at.sonomod.renderer.RenderTileEntity;
 
@@ -18,17 +20,21 @@ import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
 public class ClientProxy extends CommonProxy {
-	public static int[] displayList = new int[1];//for 1 model
+	public int[] displayList = new int[ModBlocks.customModelBlocks.size()];//for 1 model
 
 	public void preInit() {
 		super.preInit();
+		
+		registerModels();
 	}
 
 	public void init() {
 
 		super.init();
 		
-		final IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation(SonoMod.MODID, "models/grill.obj"));
+		
+		
+		/*final IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation(SonoMod.MODID, "models/grill.obj"));
 
 		displayList[0] = GLAllocation.generateDisplayLists(1);
 		GL11.glNewList(displayList[0], GL11.GL_COMPILE);
@@ -38,7 +44,33 @@ public class ClientProxy extends CommonProxy {
 		//Blocks
 		GameRegistry.registerTileEntity(GrillTileEntity.class, "grill");
 		ClientRegistry.bindTileEntitySpecialRenderer(GrillTileEntity.class, new RenderTileEntity());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.GRILL), new RenderItemBlock());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.GRILL), new RenderItemBlock());*/
 
+	}
+	
+	public void registerModels()
+	{
+		final List<BlockTileEntity<?>> blocks = ModBlocks.customModelBlocks;
+		
+		for(int i = 0; i < ModBlocks.customModelBlocks.size(); i++)
+		{
+			final String blockName = blocks.get(i).getName();
+			System.out.println(blockName);
+			System.out.println(blockName);
+			System.out.println(blockName);
+			
+			final IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation(SonoMod.MODID, "models/" + blockName + ".obj"));
+
+			displayList[i] = GLAllocation.generateDisplayLists(1);
+			GL11.glNewList(displayList[i], GL11.GL_COMPILE);
+			model.renderAll();
+			GL11.glEndList();
+
+			final RenderTileEntity render = new RenderTileEntity(blockName, blockName); 
+			
+			GameRegistry.registerTileEntity(blocks.get(i).getTileEntityClass(), blockName);
+			ClientRegistry.bindTileEntitySpecialRenderer(blocks.get(i).getTileEntityClass(), render);
+			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(blocks.get(i)), new RenderItemBlock(i, blockName));
+		}
 	}
 }

@@ -3,8 +3,6 @@ package com.at.sonomod.renderer;
 import org.lwjgl.opengl.GL11;
 
 import com.at.sonomod.SonoMod;
-import com.at.sonomod.blocks.tileentity.GrillTileEntity;
-import com.at.sonomod.proxy.ClientProxy;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -14,26 +12,22 @@ import net.minecraftforge.client.model.IModelCustom;
 
 public class RenderTileEntity extends TileEntitySpecialRenderer {
 
-	public static ResourceLocation texture;
-	public static ResourceLocation objModelLocation;
-	public static IModelCustom model;
+	public ResourceLocation texture;
+	public ResourceLocation objModelLocation;
+	public IModelCustom model;
 	
-	public RenderTileEntity()
+	public RenderTileEntity(String textureName, String objModelLocation)
 	{
-		texture = new ResourceLocation(SonoMod.MODID, "textures/models/grill.png");
-        objModelLocation = new ResourceLocation(SonoMod.MODID, "models/grill.obj");
-        model = AdvancedModelLoader.loadModel(objModelLocation);
+		this.texture = new ResourceLocation(SonoMod.MODID + ":" + "textures/models/" + textureName + ".png");
+		this.objModelLocation = new ResourceLocation(SonoMod.MODID + ":" + "models/" + objModelLocation + ".obj");;
+        model = AdvancedModelLoader.loadModel(this.objModelLocation);
 	}
 	
-	//public static final ResourceLocation texture = new ResourceLocation(SonoMod.MODID, "textures/models/grill.png");
-
+	
+	
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f) {
 		
-		
-		GrillTileEntity te2 = (GrillTileEntity) tile;
-		//float rotation = te2. + (timeSinceLastTick / 2F);
-		//float scale = te2.scale;
 		
 		bindTexture(texture);
 
@@ -46,14 +40,5 @@ public class RenderTileEntity extends TileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();
 	}
-
-	/*private void render(GrillTileEntity tile, double x, double y, double z, float f) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(x, y, z);
-		GL11.glTranslatef(0.5F, 0.0F, 0.5F);
-		bindTexture(texture);
-		GL11.glCallList(ClientProxy.displayList[0]);
-		GL11.glPopMatrix();
-	}*/
 	
 }

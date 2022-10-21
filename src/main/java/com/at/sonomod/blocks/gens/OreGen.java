@@ -1,14 +1,12 @@
 package com.at.sonomod.blocks.gens;
 
-import com.at.sonomod.SonoMod;
-import com.at.sonomod.blocks.ModBlocks;
+import java.util.Random;
+
 import cpw.mods.fml.common.IWorldGenerator;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;
-
-import java.util.Random;
 
 public class OreGen implements IWorldGenerator {
     protected Block blockToGen;

@@ -10,10 +10,14 @@ import javax.annotation.Nullable;
 
 public abstract class BlockTileEntity<T extends TileEntity> extends BlockBase {
 
+	private final String name;
+	
     public BlockTileEntity(String name, Material material, SoundType soundType) {
 
         super(name, material, soundType);
 
+        this.name = name;
+        
         GameRegistry.registerTileEntity(this.getTileEntityClass(), this.getUnlocalizedName());
     }
 
@@ -33,4 +37,9 @@ public abstract class BlockTileEntity<T extends TileEntity> extends BlockBase {
     @Nullable
     @Override
     public abstract T createTileEntity(World world, int metadata);
+    
+    public String getName()
+    {
+    	return name;
+    }
 }
