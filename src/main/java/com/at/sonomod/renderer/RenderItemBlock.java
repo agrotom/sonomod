@@ -14,10 +14,10 @@ public class RenderItemBlock implements IItemRenderer
 	private final int index;
 	private final ResourceLocation texture;
 	
-	public RenderItemBlock(int index, String texture)
+	public RenderItemBlock(int index, RenderTileEntity render)
 	{
 		this.index = index;
-		this.texture = new ResourceLocation(SonoMod.MODID + ":textures/models/" + texture + ".png");
+		this.texture = render.texture;
 	}
 	
 	@Override

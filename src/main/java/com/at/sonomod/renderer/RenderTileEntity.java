@@ -23,7 +23,12 @@ public class RenderTileEntity extends TileEntitySpecialRenderer {
         model = AdvancedModelLoader.loadModel(this.objModelLocation);
 	}
 	
-	
+	public RenderTileEntity(ResourceLocation textureLocation, String objModelLocation)
+	{
+		this.texture = textureLocation;
+		this.objModelLocation = new ResourceLocation(SonoMod.MODID + ":" + "models/" + objModelLocation + ".obj");;
+        model = AdvancedModelLoader.loadModel(this.objModelLocation);
+	}
 	
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f) {

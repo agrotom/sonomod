@@ -5,8 +5,8 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import com.at.sonomod.SonoMod;
+import com.at.sonomod.blocks.BaseModelBlock;
 import com.at.sonomod.blocks.ModBlocks;
-import com.at.sonomod.blocks.tileentity.BlockTileEntity;
 import com.at.sonomod.renderer.RenderItemBlock;
 import com.at.sonomod.renderer.RenderTileEntity;
 
@@ -35,12 +35,10 @@ public class ClientProxy extends CommonProxy {
 		
 		
 		/*final IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation(SonoMod.MODID, "models/grill.obj"));
-
 		displayList[0] = GLAllocation.generateDisplayLists(1);
 		GL11.glNewList(displayList[0], GL11.GL_COMPILE);
 		model.renderAll();
 		GL11.glEndList();
-
 		//Blocks
 		GameRegistry.registerTileEntity(GrillTileEntity.class, "grill");
 		ClientRegistry.bindTileEntitySpecialRenderer(GrillTileEntity.class, new RenderTileEntity());
@@ -50,14 +48,12 @@ public class ClientProxy extends CommonProxy {
 	
 	public void registerModels()
 	{
-		final List<BlockTileEntity<?>> blocks = ModBlocks.customModelBlocks;
+		final List<BaseModelBlock<?>> blocks = ModBlocks.customModelBlocks;
 		
 		for(int i = 0; i < ModBlocks.customModelBlocks.size(); i++)
 		{
+			final BaseModelBlock<?> block = blocks.get(i);
 			final String blockName = blocks.get(i).getName();
-			System.out.println(blockName);
-			System.out.println(blockName);
-			System.out.println(blockName);
 			
 			final IModelCustom model = AdvancedModelLoader.loadModel(new ResourceLocation(SonoMod.MODID, "models/" + blockName + ".obj"));
 
@@ -66,11 +62,11 @@ public class ClientProxy extends CommonProxy {
 			model.renderAll();
 			GL11.glEndList();
 
-			final RenderTileEntity render = new RenderTileEntity(blockName, blockName); 
+			final RenderTileEntity render = new RenderTileEntity(block.getTextureLocation(), blockName); 
 			
 			GameRegistry.registerTileEntity(blocks.get(i).getTileEntityClass(), blockName);
 			ClientRegistry.bindTileEntitySpecialRenderer(blocks.get(i).getTileEntityClass(), render);
-			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(blocks.get(i)), new RenderItemBlock(i, blockName));
+			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(blocks.get(i)), new RenderItemBlock(i, render));
 		}
 	}
 }

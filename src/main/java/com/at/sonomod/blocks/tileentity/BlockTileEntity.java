@@ -12,6 +12,11 @@ public abstract class BlockTileEntity<T extends TileEntity> extends BlockBase {
 
 	private final String name;
 	
+	
+	/**
+	 * 
+	 * @param textureLocation - set null to set default texture path.
+	 */
     public BlockTileEntity(String name, Material material, SoundType soundType) {
 
         super(name, material, soundType);
@@ -23,7 +28,8 @@ public abstract class BlockTileEntity<T extends TileEntity> extends BlockBase {
 
     public abstract Class<T> getTileEntityClass();
 
-    public T getTileEntity(World world, int xPos, int yPos, int zPos) {
+    @SuppressWarnings("unchecked")
+	public T getTileEntity(World world, int xPos, int yPos, int zPos) {
 
         return (T) world.getTileEntity(xPos, yPos, zPos);
     }
