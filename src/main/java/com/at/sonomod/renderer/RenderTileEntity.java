@@ -33,6 +33,11 @@ public class RenderTileEntity extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float f) {
 		
+		if(tile instanceof SpecialRender)
+		{
+			final SpecialRender sr = (SpecialRender) tile;
+			sr.specialRenderFunc(x, y, z);
+		}
 		
 		bindTexture(texture);
 

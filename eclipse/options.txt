@@ -3,18 +3,18 @@ mouseSensitivity:0.5
 fov:0.625
 gamma:0.0
 saturation:0.0
-renderDistance:12
+renderDistance:3
 guiScale:2
-particles:0
+particles:2
 bobView:true
 anaglyph3d:false
 advancedOpengl:false
-maxFps:120
+maxFps:260
 fboEnable:true
 difficulty:2
-fancyGraphics:true
-ao:2
-clouds:true
+fancyGraphics:false
+ao:0
+clouds:false
 resourcePacks:["PureBDcraft  32x MC17.zip"]
 lastServer:
 lang:en_US
@@ -25,9 +25,9 @@ chatLinksPrompt:true
 chatOpacity:1.0
 snooperEnabled:true
 fullscreen:false
-enableVsync:true
+enableVsync:false
 hideServerAddress:false
-advancedItemTooltips:false
+advancedItemTooltips:true
 pauseOnLostFocus:true
 showCape:true
 touchscreen:false

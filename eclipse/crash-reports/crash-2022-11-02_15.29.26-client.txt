@@ -1,0 +1,117 @@
+---- Minecraft Crash Report ----
+// I let you down. Sorry :(
+
+Time: 02.11.22 15:29
+Description: Rendering Block Entity
+
+java.lang.NullPointerException: Rendering Block Entity
+	at net.minecraft.client.renderer.entity.RenderManager.doRenderEntity(RenderManager.java:340)
+	at net.minecraft.client.renderer.entity.RenderManager.renderEntityWithPosYaw(RenderManager.java:283)
+	at com.at.sonomod.blocks.tileentity.GrillTileEntity.specialRenderFunc(GrillTileEntity.java:276)
+	at com.at.sonomod.renderer.RenderTileEntity.renderTileEntityAt(RenderTileEntity.java:40)
+	at net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher.renderTileEntityAt(TileEntityRendererDispatcher.java:141)
+	at net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher.renderTileEntity(TileEntityRendererDispatcher.java:126)
+	at net.minecraft.client.renderer.RenderGlobal.renderEntities(RenderGlobal.java:539)
+	at net.minecraft.client.renderer.EntityRenderer.renderWorld(EntityRenderer.java:1300)
+	at net.minecraft.client.renderer.EntityRenderer.updateCameraAndRender(EntityRenderer.java:1091)
+	at net.minecraft.client.Minecraft.runGameLoop(Minecraft.java:1068)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:963)
+	at net.minecraft.client.main.Main.main(Main.java:164)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at net.minecraft.launchwrapper.Launch.launch(Launch.java:135)
+	at net.minecraft.launchwrapper.Launch.main(Launch.java:28)
+	at net.minecraftforge.gradle.GradleStartCommon.launch(Unknown Source)
+	at GradleStart.main(Unknown Source)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Stacktrace:
+	at net.minecraft.client.renderer.entity.RenderManager.doRenderEntity(RenderManager.java:340)
+	at net.minecraft.client.renderer.entity.RenderManager.renderEntityWithPosYaw(RenderManager.java:283)
+	at com.at.sonomod.blocks.tileentity.GrillTileEntity.specialRenderFunc(GrillTileEntity.java:276)
+	at com.at.sonomod.renderer.RenderTileEntity.renderTileEntityAt(RenderTileEntity.java:40)
+
+-- Block Entity Details --
+Details:
+	Name: grill // com.at.sonomod.blocks.tileentity.GrillTileEntity
+	Block type: ID #177 (tile.grill // com.at.sonomod.blocks.GrillBlock)
+	Block data value: 0 / 0x0 / 0b0000
+	Block location: World: (-209,68,2), Chunk: (at 15,4,2 in -14,0; contains blocks -224,0,0 to -209,255,15), Region: (-1,0; contains chunks -32,0 to -1,31, blocks -512,0,0 to -1,255,511)
+	Actual block type: ID #177 (tile.grill // com.at.sonomod.blocks.GrillBlock)
+	Actual block data value: 0 / 0x0 / 0b0000
+Stacktrace:
+	at net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher.renderTileEntityAt(TileEntityRendererDispatcher.java:141)
+	at net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher.renderTileEntity(TileEntityRendererDispatcher.java:126)
+	at net.minecraft.client.renderer.RenderGlobal.renderEntities(RenderGlobal.java:539)
+	at net.minecraft.client.renderer.EntityRenderer.renderWorld(EntityRenderer.java:1300)
+
+-- Affected level --
+Details:
+	Level name: MpServer
+	All players: 1 total; [EntityClientPlayerMP['Player619'/633, l='MpServer', x=-209,53, y=68,62, z=2,83]]
+	Chunk stats: MultiplayerChunkCache: 65, 65
+	Level seed: 0
+	Level generator: ID 00 - default, ver 1. Features enabled: false
+	Level generator options: 
+	Level spawn location: World: (-200,64,12), Chunk: (at 8,4,12 in -13,0; contains blocks -208,0,0 to -193,255,15), Region: (-1,0; contains chunks -32,0 to -1,31, blocks -512,0,0 to -1,255,511)
+	Level time: 115441 game time, 1000 day time
+	Level dimension: 0
+	Level storage version: 0x00000 - Unknown?
+	Level weather: Rain time: 0 (now: false), thunder time: 0 (now: false)
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: false
+	Forced entities: 155 total; [EntitySquid['Squid'/260, l='MpServer', x=-227,53, y=45,28, z=-29,56], EntitySquid['Squid'/261, l='MpServer', x=-228,19, y=45,91, z=-20,50], EntitySquid['Squid'/262, l='MpServer', x=-234,66, y=50,00, z=-17,44], EntitySquid['Squid'/263, l='MpServer', x=-235,13, y=45,78, z=-13,88], EntitySquid['Squid'/264, l='MpServer', x=-229,43, y=40,55, z=-7,49], EntitySquid['Squid'/265, l='MpServer', x=-236,75, y=47,81, z=-3,13], EntitySquid['Squid'/266, l='MpServer', x=-230,55, y=46,94, z=-11,58], EntitySquid['Squid'/267, l='MpServer', x=-224,63, y=40,25, z=-10,23], EntitySquid['Squid'/268, l='MpServer', x=-238,22, y=54,66, z=-10,31], EntitySquid['Squid'/269, l='MpServer', x=-234,41, y=54,33, z=-6,51], EntitySquid['Squid'/525, l='MpServer', x=-147,90, y=45,86, z=-1,07], EntityBat['Bat'/270, l='MpServer', x=-235,28, y=29,10, z=4,00], EntitySquid['Squid'/526, l='MpServer', x=-154,04, y=44,89, z=10,01], EntitySkeleton['Skeleton'/271, l='MpServer', x=-234,41, y=25,00, z=6,84], EntitySquid['Squid'/527, l='MpServer', x=-149,75, y=50,79, z=1,81], EntitySquid['Squid'/272, l='MpServer', x=-237,99, y=47,07, z=4,18], EntitySquid['Squid'/528, l='MpServer', x=-150,75, y=54,09, z=7,78], EntitySquid['Squid'/273, l='MpServer', x=-237,01, y=51,92, z=10,19], EntitySquid['Squid'/529, l='MpServer', x=-149,51, y=54,04, z=15,72], EntitySquid['Squid'/274, l='MpServer', x=-238,56, y=50,42, z=7,91], EntitySquid['Squid'/530, l='MpServer', x=-148,50, y=52,31, z=12,25], EntitySquid['Squid'/275, l='MpServer', x=-230,16, y=42,81, z=19,94], EntitySquid['Squid'/531, l='MpServer', x=-154,69, y=56,41, z=13,91], EntitySquid['Squid'/276, l='MpServer', x=-225,63, y=47,38, z=28,13], EntitySquid['Squid'/532, l='MpServer', x=-149,28, y=44,24, z=24,19], EntitySquid['Squid'/277, l='MpServer', x=-235,28, y=46,38, z=18,34], EntitySquid['Squid'/533, l='MpServer', x=-153,19, y=42,38, z=25,25], EntitySquid['Squid'/278, l='MpServer', x=-238,32, y=49,82, z=27,89], EntitySquid['Squid'/534, l='MpServer', x=-158,72, y=44,81, z=18,22], EntitySquid['Squid'/279, l='MpServer', x=-237,90, y=52,03, z=28,36], EntitySquid['Squid'/535, l='MpServer', x=-150,50, y=46,34, z=53,50], EntitySquid['Squid'/280, l='MpServer', x=-237,11, y=52,54, z=17,72], EntitySquid['Squid'/281, l='MpServer', x=-226,31, y=53,78, z=23,03], EntitySquid['Squid'/537, l='MpServer', x=-151,72, y=46,28, z=54,41], EntitySquid['Squid'/282, l='MpServer', x=-239,31, y=50,03, z=25,69], EntitySquid['Squid'/538, l='MpServer', x=-146,47, y=42,00, z=60,47], EntitySquid['Squid'/283, l='MpServer', x=-235,03, y=49,38, z=41,59], EntitySkeleton['Skeleton'/539, l='MpServer', x=-147,56, y=12,00, z=70,69], EntitySquid['Squid'/284, l='MpServer', x=-227,94, y=48,69, z=36,25], EntityZombie['Zombie'/540, l='MpServer', x=-154,31, y=32,00, z=73,59], EntitySquid['Squid'/285, l='MpServer', x=-225,34, y=51,16, z=46,03], EntityZombie['Zombie'/541, l='MpServer', x=-156,53, y=32,00, z=73,69], EntitySquid['Squid'/286, l='MpServer', x=-228,53, y=48,03, z=33,19], EntityZombie['Zombie'/542, l='MpServer', x=-153,50, y=32,00, z=67,94], EntitySquid['Squid'/287, l='MpServer', x=-227,25, y=48,38, z=49,59], EntitySquid['Squid'/543, l='MpServer', x=-151,24, y=44,45, z=65,17], EntitySquid['Squid'/288, l='MpServer', x=-224,81, y=48,69, z=52,34], EntitySquid['Squid'/544, l='MpServer', x=-150,41, y=45,34, z=64,09], EntitySquid['Squid'/293, l='MpServer', x=-239,19, y=58,03, z=64,59], EntitySquid['Squid'/294, l='MpServer', x=-238,16, y=55,31, z=65,50], EntityZombie['Zombie'/333, l='MpServer', x=-222,03, y=28,00, z=-47,63], EntitySquid['Squid'/334, l='MpServer', x=-220,22, y=41,78, z=-40,97], EntitySquid['Squid'/335, l='MpServer', x=-214,63, y=44,33, z=-25,41], EntitySquid['Squid'/336, l='MpServer', x=-214,89, y=43,94, z=-28,31], EntitySquid['Squid'/337, l='MpServer', x=-222,54, y=45,91, z=-30,32], EntitySquid['Squid'/338, l='MpServer', x=-208,61, y=48,72, z=-25,12], EntityCreeper['Creeper'/339, l='MpServer', x=-212,16, y=25,00, z=-14,25], EntitySquid['Squid'/340, l='MpServer', x=-217,82, y=48,36, z=-15,48], EntityItem['item.item.dyePowder.black'/341, l='MpServer', x=-214,00, y=40,13, z=13,13], EntitySquid['Squid'/342, l='MpServer', x=-220,53, y=45,34, z=29,75], EntitySquid['Squid'/343, l='MpServer', x=-217,76, y=42,47, z=26,32], EntitySquid['Squid'/344, l='MpServer', x=-217,72, y=40,00, z=20,53], EntitySquid['Squid'/345, l='MpServer', x=-219,93, y=47,29, z=20,45], EntitySquid['Squid'/346, l='MpServer', x=-213,17, y=47,33, z=29,75], EntitySquid['Squid'/347, l='MpServer', x=-221,91, y=53,38, z=26,03], EntitySquid['Squid'/348, l='MpServer', x=-218,72, y=49,01, z=16,77], EntitySquid['Squid'/349, l='MpServer', x=-212,93, y=45,31, z=34,21], EntitySquid['Squid'/350, l='MpServer', x=-215,47, y=39,94, z=46,03], EntitySquid['Squid'/351, l='MpServer', x=-212,09, y=47,46, z=36,62], EntitySquid['Squid'/352, l='MpServer', x=-208,91, y=45,31, z=44,53], EntitySquid['Squid'/353, l='MpServer', x=-223,41, y=46,34, z=44,38], EntitySquid['Squid'/354, l='MpServer', x=-217,88, y=48,28, z=41,16], EntitySquid['Squid'/355, l='MpServer', x=-219,63, y=51,34, z=43,88], EntitySquid['Squid'/356, l='MpServer', x=-222,13, y=48,39, z=43,55], EntitySquid['Squid'/357, l='MpServer', x=-221,84, y=50,34, z=41,97], EntitySquid['Squid'/358, l='MpServer', x=-222,31, y=53,31, z=33,56], EntitySquid['Squid'/359, l='MpServer', x=-214,25, y=53,00, z=60,38], EntityClientPlayerMP['Player619'/633, l='MpServer', x=-209,53, y=68,62, z=2,83], EntityEnderman['Enderman'/390, l='MpServer', x=-203,76, y=27,00, z=-11,13], EntityEnderman['Enderman'/391, l='MpServer', x=-203,47, y=26,00, z=-9,88], EntitySkeleton['Skeleton'/392, l='MpServer', x=-193,94, y=13,00, z=9,47], EntitySquid['Squid'/393, l='MpServer', x=-198,41, y=48,84, z=30,34], EntityWitch['Witch'/394, l='MpServer', x=-195,94, y=33,00, z=40,50], EntitySquid['Squid'/395, l='MpServer', x=-194,09, y=46,34, z=34,50], EntitySquid['Squid'/396, l='MpServer', x=-195,63, y=48,38, z=40,53], EntitySquid['Squid'/397, l='MpServer', x=-197,96, y=50,31, z=38,30], EntitySquid['Squid'/398, l='MpServer', x=-201,50, y=51,38, z=50,72], EntitySquid['Squid'/399, l='MpServer', x=-193,90, y=48,34, z=52,45], EntitySquid['Squid'/403, l='MpServer', x=-199,72, y=50,66, z=66,47], EntitySkeleton['Skeleton'/147, l='MpServer', x=-283,84, y=22,00, z=71,50], EntitySquid['Squid'/404, l='MpServer', x=-196,21, y=53,36, z=66,29], EntityMinecartChest['entity.MinecartChest.name'/158, l='MpServer', x=-257,50, y=30,34, z=-41,50], EntityZombie['Zombie'/159, l='MpServer', x=-269,56, y=31,00, z=-40,63], EntitySquid['Squid'/160, l='MpServer', x=-263,70, y=57,37, z=-43,07], EntitySquid['Squid'/161, l='MpServer', x=-260,34, y=56,69, z=-39,69], EntitySquid['Squid'/162, l='MpServer', x=-262,78, y=53,06, z=-47,63], EntitySquid['Squid'/163, l='MpServer', x=-270,58, y=53,82, z=-35,66], EntitySquid['Squid'/164, l='MpServer', x=-262,76, y=54,19, z=-46,58], EntitySquid['Squid'/165, l='MpServer', x=-258,81, y=57,31, z=-31,56], EntityBat['Bat'/166, l='MpServer', x=-266,42, y=31,00, z=2,08], EntityBat['Bat'/167, l='MpServer', x=-268,13, y=32,10, z=0,41], EntityCreeper['Creeper'/424, l='MpServer', x=-191,97, y=13,00, z=-6,50], EntitySquid['Squid'/168, l='MpServer', x=-264,34, y=53,19, z=25,91], EntitySquid['Squid'/425, l='MpServer', x=-190,57, y=54,15, z=46,12], EntitySquid['Squid'/169, l='MpServer', x=-265,49, y=54,34, z=20,85], EntityBat['Bat'/426, l='MpServer', x=-174,74, y=28,49, z=65,17], EntitySquid['Squid'/170, l='MpServer', x=-264,06, y=55,38, z=30,54], EntitySquid['Squid'/427, l='MpServer', x=-189,19, y=51,34, z=56,53], EntitySquid['Squid'/171, l='MpServer', x=-257,72, y=51,38, z=28,88], EntitySquid['Squid'/428, l='MpServer', x=-190,78, y=54,38, z=59,81], EntitySquid['Squid'/172, l='MpServer', x=-265,81, y=50,66, z=36,28], EntitySquid['Squid'/173, l='MpServer', x=-267,34, y=53,34, z=37,53], EntityBat['Bat'/429, l='MpServer', x=-178,61, y=28,06, z=70,46], EntitySquid['Squid'/174, l='MpServer', x=-267,19, y=52,13, z=34,28], EntitySquid['Squid'/175, l='MpServer', x=-262,05, y=54,51, z=38,08], EntitySquid['Squid'/431, l='MpServer', x=-182,00, y=46,63, z=64,00], EntitySquid['Squid'/176, l='MpServer', x=-258,97, y=52,38, z=62,84], EntitySkeleton['Skeleton'/195, l='MpServer', x=-249,50, y=20,00, z=-39,72], EntitySquid['Squid'/196, l='MpServer', x=-253,56, y=54,84, z=-44,66], EntityCreeper['Creeper'/197, l='MpServer', x=-241,44, y=17,00, z=-22,00], EntityEnderman['Enderman'/198, l='MpServer', x=-251,13, y=21,00, z=-19,56], EntitySquid['Squid'/199, l='MpServer', x=-245,03, y=55,38, z=-19,44], EntitySquid['Squid'/200, l='MpServer', x=-241,50, y=54,34, z=-17,59], EntitySkeleton['Skeleton'/201, l='MpServer', x=-246,22, y=19,00, z=-15,31], EntitySquid['Squid'/202, l='MpServer', x=-249,81, y=57,13, z=-8,25], EntitySquid['Squid'/203, l='MpServer', x=-242,61, y=52,72, z=15,54], EntitySquid['Squid'/204, l='MpServer', x=-241,01, y=52,16, z=20,59], EntitySquid['Squid'/205, l='MpServer', x=-253,56, y=51,75, z=29,44], EntitySquid['Squid'/206, l='MpServer', x=-247,13, y=46,22, z=41,47], EntitySquid['Squid'/207, l='MpServer', x=-243,03, y=49,75, z=43,81], EntitySquid['Squid'/208, l='MpServer', x=-243,56, y=53,31, z=41,09], EntitySquid['Squid'/209, l='MpServer', x=-244,78, y=53,19, z=41,16], EntitySquid['Squid'/210, l='MpServer', x=-241,80, y=52,04, z=34,66], EntitySquid['Squid'/211, l='MpServer', x=-243,31, y=53,28, z=33,38], EntitySquid['Squid'/212, l='MpServer', x=-246,56, y=54,84, z=33,22], EntitySquid['Squid'/213, l='MpServer', x=-252,96, y=54,08, z=58,81], EntitySquid['Squid'/214, l='MpServer', x=-254,72, y=55,16, z=63,94], EntitySquid['Squid'/215, l='MpServer', x=-249,56, y=50,92, z=64,21], EntitySquid['Squid'/216, l='MpServer', x=-245,53, y=51,31, z=63,81], EntitySquid['Squid'/222, l='MpServer', x=-248,69, y=52,31, z=65,88], EntitySquid['Squid'/223, l='MpServer', x=-242,70, y=50,48, z=67,04], EntitySquid['Squid'/225, l='MpServer', x=-243,86, y=59,39, z=65,62], EntitySquid['Squid'/226, l='MpServer', x=-244,13, y=56,31, z=65,13], EntityPig['Pig'/488, l='MpServer', x=-163,38, y=67,00, z=-47,03], EntitySquid['Squid'/489, l='MpServer', x=-160,69, y=55,31, z=-3,91], EntitySquid['Squid'/490, l='MpServer', x=-161,50, y=50,34, z=-1,66], EntitySquid['Squid'/491, l='MpServer', x=-171,41, y=47,38, z=6,50], EntitySquid['Squid'/492, l='MpServer', x=-166,81, y=46,31, z=13,34], EntitySquid['Squid'/493, l='MpServer', x=-169,16, y=42,24, z=14,24], EntitySquid['Squid'/494, l='MpServer', x=-168,50, y=49,38, z=2,72], EntitySquid['Squid'/495, l='MpServer', x=-161,66, y=50,31, z=1,13], EntitySquid['Squid'/496, l='MpServer', x=-160,00, y=50,05, z=6,11], EntitySquid['Squid'/497, l='MpServer', x=-167,32, y=45,12, z=21,88], EntitySquid['Squid'/498, l='MpServer', x=-168,09, y=44,00, z=17,22], EntitySquid['Squid'/499, l='MpServer', x=-162,50, y=44,31, z=55,28]]
+	Retry entities: 0 total; []
+	Server brand: fml,forge
+	Server type: Integrated singleplayer server
+Stacktrace:
+	at net.minecraft.client.multiplayer.WorldClient.addWorldInfoToCrashReport(WorldClient.java:415)
+	at net.minecraft.client.Minecraft.addGraphicsAndWorldToCrashReport(Minecraft.java:2581)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:985)
+	at net.minecraft.client.main.Main.main(Main.java:164)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at net.minecraft.launchwrapper.Launch.launch(Launch.java:135)
+	at net.minecraft.launchwrapper.Launch.main(Launch.java:28)
+	at net.minecraftforge.gradle.GradleStartCommon.launch(Unknown Source)
+	at GradleStart.main(Unknown Source)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.7.10
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_341, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode), Oracle Corporation
+	Memory: 474507344 bytes (452 MB) / 772276224 bytes (736 MB) up to 3801088000 bytes (3625 MB)
+	JVM Flags: 0 total; 
+	AABB Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	IntCache: cache: 0, tcache: 0, allocated: 13, tallocated: 95
+	FML: MCP v9.05 FML v7.10.99.99 Minecraft Forge 10.13.4.1614 4 mods loaded, 4 mods active
+	States: 'U' = Unloaded 'L' = Loaded 'C' = Constructed 'H' = Pre-initialized 'I' = Initialized 'J' = Post-initialized 'A' = Available 'D' = Disabled 'E' = Errored
+	UCHIJAAAA	mcp{9.05} [Minecraft Coder Pack] (minecraft.jar) 
+	UCHIJAAAA	FML{7.10.99.99} [Forge Mod Loader] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	Forge{10.13.4.1614} [Minecraft Forge] (forgeSrc-1.7.10-10.13.4.1614-1.7.10.jar) 
+	UCHIJAAAA	sonomod{1.0} [Example Mod] (sonomod-1.0.jar) 
+	GL info: ' Vendor: 'Intel' Version: '4.3.0 - Build 20.19.15.4531' Renderer: 'Intel(R) HD Graphics 4600'
+	Launched Version: 1.7.10
+	LWJGL: 2.9.1
+	OpenGL: Intel(R) HD Graphics 4600 GL version 4.3.0 - Build 20.19.15.4531, Intel
+	GL Caps: Using GL 1.3 multitexturing.
+Using framebuffer objects because OpenGL 3.0 is supported and separate blending is supported.
+Anisotropic filtering is supported and maximum anisotropy is 16.
+Shaders are available because OpenGL 2.1 is supported.
+
+	Is Modded: Definitely; Client brand changed to 'fml,forge'
+	Type: Client (map_client.txt)
+	Resource Packs: [PureBDcraft  32x MC17.zip]
+	Current Language: English (US)
+	Profiler Position: N/A (disabled)
+	Vec3 Pool Size: 0 (0 bytes; 0 MB) allocated, 0 (0 bytes; 0 MB) used
+	Anisotropic Filtering: Off (1)

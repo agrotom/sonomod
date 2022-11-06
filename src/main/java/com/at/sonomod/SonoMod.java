@@ -4,6 +4,7 @@ import com.at.sonomod.blocks.ModBlocks;
 import com.at.sonomod.blocks.gens.OreGen;
 import com.at.sonomod.items.ModItems;
 import com.at.sonomod.proxy.ClientProxy;
+import com.at.sonomod.recipes.GrillRecipes;
 import com.at.sonomod.recipes.Recipes;
 
 import cpw.mods.fml.common.Mod;
@@ -45,6 +46,7 @@ public class SonoMod
         GameRegistry.registerWorldGenerator(new OreGen(ModBlocks.TUNGSTEN_ORE, 6, 5, 40, 20),0);
         GameRegistry.registerWorldGenerator(new OreGen(ModBlocks.ONYX_ORE, 3, 5, 15, 5),0);
         Recipes.registerFurnace();
+        GrillRecipes.registerRecipes();
         
         proxy.init();
     }

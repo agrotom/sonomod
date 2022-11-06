@@ -7,11 +7,14 @@ import org.lwjgl.opengl.GL11;
 import com.at.sonomod.SonoMod;
 import com.at.sonomod.blocks.BaseModelBlock;
 import com.at.sonomod.blocks.ModBlocks;
+import com.at.sonomod.recipes.GrillRecipes;
 import com.at.sonomod.renderer.RenderItemBlock;
 import com.at.sonomod.renderer.RenderTileEntity;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -26,6 +29,7 @@ public class ClientProxy extends CommonProxy {
 		super.preInit();
 		
 		registerModels();
+		GrillRecipes.registerRecipes();
 	}
 
 	public void init() {
@@ -46,6 +50,7 @@ public class ClientProxy extends CommonProxy {
 
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public void registerModels()
 	{
 		final List<BaseModelBlock<?>> blocks = ModBlocks.customModelBlocks;
