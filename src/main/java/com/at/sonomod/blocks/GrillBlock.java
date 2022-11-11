@@ -1,16 +1,17 @@
 package com.at.sonomod.blocks;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import com.at.sonomod.blocks.tileentity.GrillTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class GrillBlock extends BaseModelBlock<GrillTileEntity> {
@@ -95,20 +96,20 @@ public class GrillBlock extends BaseModelBlock<GrillTileEntity> {
 			
 			final ItemStack playerItem = player.getHeldItem();
 			
-			te.operate(player, playerItem, side, subX);
+			te.operate(player, playerItem, side, subX, subZ);
 		}
 		
 		return true;
 	}
 	
 	@Override
-    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack)
     {
-        ArrayList<ItemStack> ret = super.getDrops(world, x, y, z, metadata, fortune);
-        GrillTileEntity te = getTileEntity(world, x, y, z);
-        
-        ret.addAll(te.getDrops());
-        
-        return ret;
-    }
+		//This gets the direction the player is facing as an int from 0 to 3
+		int dir = MathHelper.floor_double((player.rotationYaw * 4F) / 360F + 0.5D) & 3;
+		//You can use the block metadata to save the direction
+		world.setBlockMetadataWithNotify(x, y, z, dir, 3);
+		//Or you can save it in a tile entity if you are using one
+		createTileEntity(world, world.getBlockMetadata(x, y, z));
+	}
 }

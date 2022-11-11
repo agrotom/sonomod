@@ -16,15 +16,12 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
-import scala.tools.nsc.settings.Final;
 
 public class GrillTileEntity extends TileEntity implements SpecialRender {
 	private ItemStack item = null;
@@ -98,9 +95,15 @@ public class GrillTileEntity extends TileEntity implements SpecialRender {
 		if(result != null)
 		{
 			if(bakedItem == null)
+			{
 				bakedItem = result.copy();
+				item.stackSize--;
+			}
 			else if(bakedItem.stackSize < 64)
+			{
 				bakedItem.stackSize++;
+				item.stackSize--;
+			}
 			else 
 				return false;
 			
@@ -126,7 +129,6 @@ public class GrillTileEntity extends TileEntity implements SpecialRender {
 					if(burnTime == 0)
 					{
 						bake();
-						onItemsUpdate();
 					}
 				}
 				else
@@ -146,11 +148,14 @@ public class GrillTileEntity extends TileEntity implements SpecialRender {
 		}
 	}
 	
-	public void operate(EntityPlayer player, ItemStack playerHand, int side, float x)
+	public void operate(EntityPlayer player, ItemStack playerHand, int side, float x, float z)
 	{
 		if(side == 1)
 		{
-			if(x >= 0.5f && x <= 1.0f)
+			float subCoord = getBlockMetadata() % 2 == 0 ? z : x;
+			boolean reverse = getBlockMetadata() == 2 || getBlockMetadata() == 1;
+			
+			if((!reverse && subCoord >= 0.5f && subCoord <= 1.0f) || (reverse && subCoord >= 0.0f && subCoord < 0.5f))
 			{			
 				if(hasBakedItemIn())
 				{
@@ -162,7 +167,7 @@ public class GrillTileEntity extends TileEntity implements SpecialRender {
 					bakedItem = null;
 				}
 			}
-			else if(x >= 0.0f && x < 0.5f)
+			else if((!reverse && subCoord >= 0.0f && subCoord < 0.5f) || (reverse && subCoord >= 0.5f && subCoord <= 1.0f))
 			{
 				if(hasItemIn())
 				{
@@ -191,8 +196,6 @@ public class GrillTileEntity extends TileEntity implements SpecialRender {
 					--playerHand.stackSize;
 				}
 			}
-			
-			onItemsUpdate();
 		}
 		
 		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
@@ -263,7 +266,7 @@ public class GrillTileEntity extends TileEntity implements SpecialRender {
         this.writeToNBT(tagCompound);
         
 
-        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, tagCompound);
+        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, getBlockMetadata(), tagCompound);
     }
 
     @Override
@@ -277,48 +280,62 @@ public class GrillTileEntity extends TileEntity implements SpecialRender {
     @SideOnly(Side.CLIENT)
 	@Override
 	public void specialRenderFunc(double x, double y, double z) {
-		//item = new ItemStack(Items.porkchop);
-		
-    	EntityItem e;
+    	EntityItem e = null;
     	
-		if(item != null) {
+		if(item != null && (e == null || !item.getItem().equals(e.getEntityItem().getItem()))) {
+			boolean localX = getBlockMetadata() % 2 == 0;
+			boolean reverse = getBlockMetadata() == 2 || getBlockMetadata() == 1;
+			
 			e = new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, item);
-			e.hoverStart = 0; //this is making it be off-center
-			e.rotationYaw = 0; //this is what's making it rotate for you
-			e.motionX = 0; //zero out these just in case
+			e.hoverStart = 0;
+			e.rotationYaw = 0;
+			e.motionX = 0;
 			e.motionY = 0;
 			e.motionZ = 0;
 			
-			EntityPlayer player = (EntityPlayer) worldObj.playerEntities.get(0);
-			player.addChatComponentMessage(new ChatComponentText("ss"));
-			
 			if(Minecraft.getMinecraft().thePlayer.isSneaking())
-				TextRenderer.renderLabel(this, "" + item.stackSize, x + 0.2F, y + 0.8F, z + 0.8F, 0);
+			{
+				if(reverse)
+					TextRenderer.renderLabel(this, "" + item.stackSize, x + (localX ? 0.5F : 0.8F), y + 0.8F, z + (localX ? 1.15F : 0.85F), 0);
+				else
+					TextRenderer.renderLabel(this, "" + item.stackSize, x + (localX ? 0.5F : 0.25F), y + 0.8F, z + (localX ? 0.53F : 0.85F), 0);
+			}
 			
 			GL11.glPushMatrix();
-			GL11.glTranslatef((float)x + 0.2F, (float)y + 0.1F, (float)z + 0.5F);
-			//GL11.glRotatef(180, 1, 0, 0);
+			if(reverse)
+				GL11.glTranslatef((float)x + (localX ? 0.5F : 0.8F), (float)y + 0.1F, (float)z + (localX ? 0.8F : 0.5F));
+			else
+				GL11.glTranslatef((float)x + (localX ? 0.5F : 0.27F), (float)y + 0.1F, (float)z + (localX ? 0.17F : 0.5F));
 			RenderHelper.enableStandardItemLighting();
 			RenderManager.instance.renderEntityWithPosYaw(e, 0, 0, 0, 0, 0);
 			GL11.glPopMatrix();
 		}
 		
-		if(bakedItem != null) {
+		if(bakedItem != null && (e == null || !bakedItem.getItem().equals(e.getEntityItem().getItem()))) {
+			boolean localX = getBlockMetadata() % 2 == 0;
+			boolean reverse = getBlockMetadata() == 2 || getBlockMetadata() == 1;
+			
 			e = new EntityItem(this.worldObj, this.xCoord, this.yCoord, this.zCoord, bakedItem);
-			e.hoverStart = 0; //this is making it be off-center
-			e.rotationYaw = 0; //this is what's making it rotate for you
-			e.motionX = 0; //zero out these just in case
+			e.hoverStart = 0;
+			e.rotationYaw = 0;
+			e.motionX = 0;
 			e.motionY = 0;
 			e.motionZ = 0;
 			
-			//player.addChatComponentMessage(new ChatComponentText("ss"));
-			
 			if(Minecraft.getMinecraft().thePlayer.isSneaking())
-				TextRenderer.renderLabel(this, "" + bakedItem.stackSize, x + 0.8F, y + 0.8F, z + 0.8F, 0);
+			{
+				if(reverse)
+					TextRenderer.renderLabel(this, "" + bakedItem.stackSize, x + (localX ? 0.5F : 0.25F), y + 0.8F, z + (localX ? 0.53F : 0.85F), 0);
+				else
+					TextRenderer.renderLabel(this, "" + bakedItem.stackSize, x + (localX ? 0.5F : 0.8F), y + 0.8F, z + (localX ? 1.15F : 0.85F), 0);
+			}
 			
 			GL11.glPushMatrix();
-			GL11.glTranslatef((float)x + 0.8F, (float)y + 0.1F, (float)z + 0.5F);
-			//GL11.glRotatef(180, 1, 0, 0);
+			if(reverse)
+				GL11.glTranslatef((float)x + (localX ? 0.5F : 0.27F), (float)y + 0.1F, (float)z + (localX ? 0.27F : 0.5F));
+			else
+				GL11.glTranslatef((float)x + (localX ? 0.5F : 0.8F), (float)y + 0.1F, (float)z + (localX ? 0.8F : 0.5F));
+				
 			RenderHelper.enableStandardItemLighting();
 			RenderManager.instance.renderEntityWithPosYaw(e, 0, 0, 0, 0, 0);
 			GL11.glPopMatrix();

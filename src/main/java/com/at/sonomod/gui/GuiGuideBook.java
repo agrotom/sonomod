@@ -36,7 +36,8 @@ public class GuiGuideBook extends GuiBase {
         super.drawScreen(x, y, ticks);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public void initGui() {
         int guiX = (width - guiWidth) / 2;
         int guiY = (height - guiHeight) / 2;

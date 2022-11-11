@@ -3,7 +3,6 @@ package com.at.sonomod.gui.advancedgui.components;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)

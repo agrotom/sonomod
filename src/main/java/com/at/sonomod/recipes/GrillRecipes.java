@@ -6,9 +6,10 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 
 /**
  * 
@@ -63,9 +64,18 @@ public class GrillRecipes {
 	public static ItemStack getSmeltingResult(final ItemStack ingredient)
 	{
 		if(ingredient != null)
+		{
 			for(Map.Entry<ItemStack, ItemStack> entry : smeltingRecipes.entrySet())
 				if(itemStacksEquals(ingredient, entry.getKey()))
 					return entry.getValue();
+		
+			@SuppressWarnings("unchecked")
+			final Map<ItemStack, ItemStack> fcRec = (Map<ItemStack, ItemStack>) FurnaceRecipes.instance().getSmeltingList();
+			
+			for(Map.Entry<ItemStack, ItemStack> entry : fcRec.entrySet())
+				if(entry.getKey().getItem() instanceof ItemFood && itemStacksEquals(ingredient, entry.getKey()))
+					return entry.getValue();
+		}
 		
 		return null;
 	}
@@ -73,6 +83,6 @@ public class GrillRecipes {
 	// Put in proxy
 	public static void registerRecipes()
 	{
-		addItemSmelting(Items.porkchop, new ItemStack(Items.cooked_porkchop), 0.7f);
+		//addItemSmelting(Items.porkchop, new ItemStack(Items.cooked_porkchop), 0.7f);
 	}
 }

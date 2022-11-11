@@ -42,12 +42,27 @@ public class RenderTileEntity extends TileEntitySpecialRenderer {
 		bindTexture(texture);
 
 		GL11.glPushMatrix();
-		GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
-		GL11.glScalef(1, 1, 1);
-		GL11.glPushMatrix();
-		GL11.glRotatef(0, 0F, 1F, 0.5F);
-		model.renderAll();
-		GL11.glPopMatrix();
+			GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
+			GL11.glScalef(1, 1, 1);
+			GL11.glPushMatrix();
+				GL11.glRotatef(0, 0F, 1F, 0.5F);
+				
+				int i;
+		
+				if(!tile.hasWorldObj())
+				{
+					i = 0;
+				}
+				else
+				{
+					i = tile.getBlockMetadata();
+				}
+				double rotate = (double)((double)i * 90D);
+		
+				GL11.glRotated(rotate, 0, 1D, 0);
+				
+				model.renderAll();
+			GL11.glPopMatrix();
 		GL11.glPopMatrix();
 	}
 	

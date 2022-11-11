@@ -5,7 +5,8 @@ import java.util.List;
 
 public class Category {
     private String name;
-    private String image;
+    @SuppressWarnings("unused")
+	private String image;
     private List<Note> notes = new ArrayList<Note>();
 
     public Category(String name, String image) {

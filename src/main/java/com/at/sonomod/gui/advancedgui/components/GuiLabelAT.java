@@ -19,7 +19,8 @@ public class GuiLabelAT extends GuiComponent  {
     }
 
     public void drawLabel(Minecraft mc, int mouseX, int mouseY) {
-        List<String> formattedString = (List<String>)mc.fontRendererObj.listFormattedStringToWidth(labelText, width);
+        @SuppressWarnings("unchecked")
+		List<String> formattedString = (List<String>)mc.fontRendererObj.listFormattedStringToWidth(labelText, width);
         int currentY = yPos;
 
         for(String item : formattedString) {
