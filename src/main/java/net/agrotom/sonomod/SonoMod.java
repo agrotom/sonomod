@@ -1,6 +1,9 @@
 package net.agrotom.sonomod;
 
+import net.agrotom.sonomod.blocks.ModBlocks;
+import net.agrotom.sonomod.client.render.GrillTileEntityRenderer;
 import net.agrotom.sonomod.items.ModItems;
+import net.agrotom.sonomod.tileentity.ModTE;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
@@ -8,6 +11,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -42,6 +46,8 @@ public class SonoMod
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(eventBus);
+        ModBlocks.register(eventBus);
+        ModTE.register(eventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -56,6 +62,8 @@ public class SonoMod
 
     @SuppressWarnings("resource")
 	private void doClientStuff(final FMLClientSetupEvent event) {
+    	ClientRegistry.bindTileEntityRenderer(ModTE.GRILL_TILEENTITY.get(), GrillTileEntityRenderer::new);
+    	
         // do something that can only be done on the client
         //LOGGER.info("Got game settings {}", event.getMinecraftSupplier().ge);
     }
