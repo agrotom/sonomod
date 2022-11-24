@@ -1,17 +1,32 @@
 {
 	"variants": {
-		"facing=east": {
+		"facing=east,assemble=true": {
+			"model": "sonomod:block/grill_block_assemble",
+			"y": 90
+			},
+		"facing=east,assemble=false": {
 			"model": "sonomod:block/grill_block",
 			"y": 90
 			},
-		"facing=north": {
+		"facing=north,assemble=true": {
+			"model": "sonomod:block/grill_block_assemble"
+			},
+		"facing=north,assemble=false": {
 			"model": "sonomod:block/grill_block"
 			},
-		"facing=south": {
+		"facing=south,assemble=true": {
+			"model": "sonomod:block/grill_block_assemble",
+			"y": 180
+			},
+		"facing=south,assemble=false": {
 			"model": "sonomod:block/grill_block",
 			"y": 180
 			},
-		"facing=west": {
+		"facing=west,assemble=true": {
+			"model": "sonomod:block/grill_block_assemble",
+			"y": 270
+			},
+		"facing=west,assemble=false": {
 			"model": "sonomod:block/grill_block",
 			"y": 270
 			}

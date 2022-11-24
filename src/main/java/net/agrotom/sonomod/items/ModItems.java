@@ -18,6 +18,9 @@ public class ModItems {
 	public static final RegistryObject<Item> TUNGSTEN_INGOT = ITEMS.register("tungsten_ingot",
             () -> new Item(new Item.Properties().tab(ItemGroup.TAB_MATERIALS)));
 	
+	public static final RegistryObject<Item> TUNGSTEN_NUGGET = ITEMS.register("tungsten_nugget",
+			() -> new Item(new Item.Properties().tab(ItemGroup.TAB_MATERIALS)));
+	
 	public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

@@ -1,5 +1,8 @@
 {
 	"item.sonomod.onyx": "Onyx",
 	"item.sonomod.tungsten_ingot": "Tungsten Ingot",
-	"block.sonomod.grill_block": "Grill"
+	"item.sonomod.tungsten_nugget": "Tungsten Nugget",
+	"block.sonomod.grill_block": "Grill",
+	"block.sonomod.onyx_ore": "Onyx Ore",
+	"block.sonomod.tungsten_ore": "Tungsten Ore"
 }

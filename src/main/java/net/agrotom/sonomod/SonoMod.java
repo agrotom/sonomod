@@ -2,6 +2,7 @@ package net.agrotom.sonomod;
 
 import net.agrotom.sonomod.blocks.ModBlocks;
 import net.agrotom.sonomod.client.render.GrillTileEntityRenderer;
+import net.agrotom.sonomod.data.recipes.ModRecipeTypes;
 import net.agrotom.sonomod.items.ModItems;
 import net.agrotom.sonomod.tileentity.ModTE;
 import net.minecraft.block.Block;
@@ -48,6 +49,8 @@ public class SonoMod
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
         ModTE.register(eventBus);
+        
+        ModRecipeTypes.register(eventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
