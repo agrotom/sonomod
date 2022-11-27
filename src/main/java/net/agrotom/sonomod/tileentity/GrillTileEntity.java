@@ -5,6 +5,7 @@ import java.util.Optional;
 import net.agrotom.sonomod.blocks.GrillBlock;
 import net.agrotom.sonomod.data.recipes.GrillRecipe;
 import net.agrotom.sonomod.data.recipes.ModRecipeTypes;
+import net.agrotom.sonomod.util.NBTIDs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,10 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CampfireCookingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -30,7 +28,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class GrillTileEntity extends TileEntity implements ITickableTileEntity {
+public class GrillTileEntity extends AbstractTileEntity implements ITickableTileEntity {
 	
 	private final ItemStackHandler items = createHandler();
 	private final LazyOptional<ItemStackHandler> handler = LazyOptional.of(() -> items);
@@ -46,14 +44,11 @@ public class GrillTileEntity extends TileEntity implements ITickableTileEntity {
 			@Override
 			protected void onContentsChanged(int slot)
 			{
-				if(!level.isClientSide)
-				{
-					markUpdate();
-				}
+				markUpdate();
 			}
 			
 			@Override
-			public boolean isItemValid(int slot, ItemStack stack)
+			public boolean isItemValid(final int slot, final ItemStack stack)
 			{
 				return super.isItemValid(slot, stack);
 			}
@@ -287,23 +282,7 @@ public class GrillTileEntity extends TileEntity implements ITickableTileEntity {
 	//<=================================================DATA=METHODS=================================================>
 	
 	@Override
-	public void handleUpdateTag(BlockState state, CompoundNBT tag)
-	{
-		this.load(state, tag);
-	}
-	
-	@Override
-	public CompoundNBT getUpdateTag()
-	{
-		final CompoundNBT nbt = new CompoundNBT();
-
-		save(nbt);
-		
-		return nbt;
-	}
-	
-	@Override
-	public void load(BlockState state, CompoundNBT nbt) {
+	public void load(final BlockState state, final CompoundNBT nbt) {
 		super.load(state, nbt);
 		
 		if(nbt.contains(TIME_TAG))
@@ -311,22 +290,13 @@ public class GrillTileEntity extends TileEntity implements ITickableTileEntity {
 		else
 			burnTime = 0;
 		
-		if(nbt.contains(INV_TAG))
-			items.deserializeNBT(nbt.getCompound(INV_TAG));
-		else
-		{
-			items.setStackInSlot(0, ItemStack.EMPTY);
-			items.setStackInSlot(1, ItemStack.EMPTY);
-		}
-		
-		final int NBT_INT_ID = 10;
-		if (nbt.contains(INV_TAG, NBT_INT_ID)) {
+		if (nbt.contains(INV_TAG, NBTIDs.COMPOUND)) {
 			items.deserializeNBT(nbt.getCompound(INV_TAG));;
 		}
 	}
 	
 	@Override
-	public CompoundNBT save(CompoundNBT nbt) {
+	public CompoundNBT save(final CompoundNBT nbt) {
 		super.save(nbt);
 		
 		nbt.put(INV_TAG, items.serializeNBT());
@@ -337,28 +307,7 @@ public class GrillTileEntity extends TileEntity implements ITickableTileEntity {
 	}
 	
 	@Override
-	public SUpdateTileEntityPacket getUpdatePacket() {
-		final CompoundNBT nbtTag = new CompoundNBT();
-		
-		this.save(nbtTag);
-		
-	    return new SUpdateTileEntityPacket(this.worldPosition, -1, nbtTag);
-	}
-	
-	@Override
-	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-		this.load(level.getBlockState(pkt.getPos()), pkt.getTag());
-	}
-	
-	private void markUpdate()
-	{
-		setChanged();
-		level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
-	}
-	
-	
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side)
+	public <T> LazyOptional<T> getCapability(final Capability<T> cap, final Direction side)
 	{
 		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
 			return handler.cast();

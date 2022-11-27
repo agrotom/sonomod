@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+  	{
+  		"item": "sonomod:tungsten_ingot"
+  	}
+  ],
+  "result": {
+    "item": "sonomod:tungsten_nugget",
+    "count": 9
+  }
+}

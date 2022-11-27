@@ -8,6 +8,9 @@ public class ATUtils
 
 	public static <T> void logToAllPlayers(final IWorld world, final T msg)
 	{
+		if(world == null)
+			return;
+		
 		world.players().forEach(player -> player.sendMessage(new StringTextComponent(msg.toString()), player.getUUID()));
 	}
 

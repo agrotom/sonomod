@@ -5,13 +5,19 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.ILiquidContainer;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -27,9 +33,10 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class GrillBlock extends Block {
+public class GrillBlock extends Block implements IWaterLoggable {
 	
 	public static final DirectionProperty FACING = HorizontalBlock.FACING;
+	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 	public static final BooleanProperty ASSEMBLE = BooleanProperty.create("assemble");
 	
 	private static final VoxelShape SHAPE = VoxelShapes.or(
@@ -40,6 +47,9 @@ public class GrillBlock extends Block {
 	public GrillBlock(Properties properties)
 	{
 		super(properties);
+		
+		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ASSEMBLE, false)
+	    		  .setValue(WATERLOGGED, Boolean.valueOf(false)));
 	}
 	
 	@Override
@@ -73,8 +83,13 @@ public class GrillBlock extends Block {
 	}
 	
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext p_196258_1_) {
-	      return this.defaultBlockState().setValue(FACING, p_196258_1_.getHorizontalDirection().getOpposite()).setValue(ASSEMBLE, false);
+	public BlockState getStateForPlacement(final BlockItemUseContext useContext)
+	{
+		final BlockPos clickedPos = useContext.getClickedPos();
+		final FluidState fluidState = useContext.getLevel().getFluidState(clickedPos);
+		
+		return super.getStateForPlacement(useContext).setValue(FACING, useContext.getHorizontalDirection().getOpposite()).setValue(ASSEMBLE, false)
+	    		  .setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER);
 	}
 	
 	@Override
@@ -126,7 +141,13 @@ public class GrillBlock extends Block {
 	@Override
 	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> state)
 	{
-		state.add(FACING);
-		state.add(ASSEMBLE);
+		state.add(FACING, ASSEMBLE, WATERLOGGED);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public FluidState getFluidState(BlockState state)
+	{
+		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
 }

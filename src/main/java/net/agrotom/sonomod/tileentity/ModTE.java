@@ -14,6 +14,9 @@ public class ModTE {
 	public static final RegistryObject<TileEntityType<GrillTileEntity>> GRILL_TILEENTITY = TILE_ENTITIES.register("grill_tileentity",
 			() -> TileEntityType.Builder.of(GrillTileEntity::new, ModBlocks.GRILL_BLOCK.get()).build(null));
 	
+	public static final RegistryObject<TileEntityType<WoodenBarrelTileEntity>> WOODEN_BARREL_TILEENTITY = TILE_ENTITIES.register("wooden_barrel_tileentity",
+			() -> TileEntityType.Builder.of(WoodenBarrelTileEntity::new, ModBlocks.WOODEN_BARREL.get()).build(null));
+	
 	public static void register(IEventBus eventBus)
 	{
 		TILE_ENTITIES.register(eventBus);
