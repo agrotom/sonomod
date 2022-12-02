@@ -1,16 +1,11 @@
 package net.agrotom.sonomod.tileentity;
 
-import java.util.Optional;
-
-import javax.swing.plaf.basic.BasicComboBoxUI.ItemHandler;
-
+import net.agrotom.sonomod.blocks.WoodenBarrel;
 import net.agrotom.sonomod.util.ATUtils;
 import net.agrotom.sonomod.util.NBTIDs;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -28,9 +23,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
-public class WoodenBarrelTileEntity extends AbstractTileEntity {
+public class WoodenBarrelTileEntity extends AbstractTileEntity
+{
 
 	private final FluidTank tank = createHandler();
 	private final LazyOptional<IFluidTank> handler = LazyOptional.of(() -> tank);
@@ -50,8 +45,7 @@ public class WoodenBarrelTileEntity extends AbstractTileEntity {
 			@Override
 			public boolean isFluidValid(final FluidStack stack)
 			{
-				return true;
-				//return stack.getFluid().getAttributes().getTemperature() < 100;
+				return stack.getFluid().getAttributes().getTemperature() < 1000;
 			}
 		};
 	}
@@ -98,11 +92,21 @@ public class WoodenBarrelTileEntity extends AbstractTileEntity {
 			
 			final IItemHandler itemHandler = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseGet(null);
 			
+			final int maxCapacity = getCapacity();
 			
+			FluidActionResult result = FluidUtil.tryEmptyContainerAndStow(bucket, tank, itemHandler, maxCapacity, player, true);
 			
-			player.setItemInHand(hand, .result);
-			
-			player.setItemInHand(hand, FluidUtil.tryFillContainerAndStow(bucket, tank, itemHandler, getCapacity(), player, true).result);
+			if(result.success)
+			{
+				player.setItemInHand(hand, result.result);
+			}
+			else
+			{
+				result = FluidUtil.tryFillContainerAndStow(bucket, tank, itemHandler, maxCapacity, player, true);
+				
+				if(result.success)
+					player.setItemInHand(hand, result.result);
+			}
 		}
 	}
 	
@@ -146,6 +150,23 @@ public class WoodenBarrelTileEntity extends AbstractTileEntity {
 	//<=======================================DATA=METHODS=======================================>
 	
 	@Override
+	protected void markUpdate()
+	{
+		if(!level.isClientSide)
+		{
+			final int currentAmount = getCurrentAmount();
+			int waterLevel = (int) Math.floor(currentAmount / 1000);
+			
+			waterLevel = currentAmount > 0 && waterLevel == 0 ? 1 : waterLevel;
+			
+			if(waterLevel != getBlockState().getValue(WoodenBarrel.FLUID_LEVEL))
+				level.setBlock(worldPosition, getBlockState().setValue(WoodenBarrel.FLUID_LEVEL, waterLevel), 3);
+			
+			super.markUpdate();
+		}
+	}
+	
+	@Override
 	public void load(final BlockState state, final CompoundNBT nbt)
 	{
 		super.load(state, nbt);
@@ -163,13 +184,16 @@ public class WoodenBarrelTileEntity extends AbstractTileEntity {
 		
 		final CompoundNBT tankNBT = new CompoundNBT();
 		
+		tank.writeToNBT(tankNBT);
+		
 		nbt.put(TANK_TAG, tankNBT);
 		
 		return nbt;
 	}
 	
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side)
+	{
 		if(cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			return handler.cast();
 		

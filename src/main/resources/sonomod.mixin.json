@@ -1,0 +1,15 @@
+{
+	"required": true,
+  	"package": "net.agrotom.sonomod.mixins",
+ 	"compatibilityLevel": "JAVA_8",
+  	"refmap": "sonomod.refmap.json",
+ 	"mixins": [
+ 		"access.EntityTypeAccess"
+ 	],
+ 	"client": [
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+  	"minVersion": "0.8"
+}

@@ -1,7 +1,9 @@
 package net.agrotom.sonomod.data.recipes;
 
 import net.agrotom.sonomod.SonoMod;
+import net.agrotom.sonomod.blocks.ModBlocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
@@ -22,6 +24,12 @@ public interface IGrillRecipe extends IRecipe<IInventory>
 	default boolean isSpecial()
 	{
 		return true;
+	}
+	
+	@Override
+	default ItemStack getToastSymbol()
+	{
+		return new ItemStack(ModBlocks.GRILL_BLOCK.get());
 	}
 
 	@Override

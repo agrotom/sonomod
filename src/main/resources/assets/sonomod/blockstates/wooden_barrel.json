@@ -10,10 +10,10 @@
 		"model": "sonomod:block/wooden_barrel_level2"
 		},
 		"fluid_level=3": {
-		"model": "sonomod:block/wooden_barrel_level2"
+		"model": "sonomod:block/wooden_barrel_level3"
 		},
 		"fluid_level=4": {
-		"model": "sonomod:block/wooden_barrel_level2"
+		"model": "sonomod:block/wooden_barrel_level4"
 		}
 	}
 }

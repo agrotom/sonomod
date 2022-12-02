@@ -1,0 +1,9 @@
+{
+	"parent": "block/hopper",
+	"textures": {
+		"particle": "sonomod:block/hot_hopper_outside",
+		"top": "sonomod:block/hot_hopper_top",
+		"side": "sonomod:block/hot_hopper_outside",
+		"inside": "sonomod:block/hot_hopper_inside"
+	}
+}

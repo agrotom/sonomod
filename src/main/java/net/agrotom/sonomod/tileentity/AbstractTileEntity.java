@@ -11,6 +11,8 @@ public abstract class AbstractTileEntity extends TileEntity
 {
 	protected void markUpdate()
 	{
+		if (!this.hasLevel()) return;
+		
 		if(!level.isClientSide)
 		{
 			setChanged();
@@ -22,7 +24,7 @@ public abstract class AbstractTileEntity extends TileEntity
 	{
 		super(tile);
 	}
-
+	
 	@Override
 	public void handleUpdateTag(final BlockState state, final CompoundNBT tag)
 	{

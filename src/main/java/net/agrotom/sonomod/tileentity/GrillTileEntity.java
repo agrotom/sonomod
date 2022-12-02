@@ -3,9 +3,11 @@ package net.agrotom.sonomod.tileentity;
 import java.util.Optional;
 
 import net.agrotom.sonomod.blocks.GrillBlock;
+import net.agrotom.sonomod.blocks.ModBlocks;
 import net.agrotom.sonomod.data.recipes.GrillRecipe;
 import net.agrotom.sonomod.data.recipes.ModRecipeTypes;
 import net.agrotom.sonomod.util.NBTIDs;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +24,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -30,19 +31,22 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class GrillTileEntity extends AbstractTileEntity implements ITickableTileEntity {
 	
-	private final ItemStackHandler items = createHandler();
-	private final LazyOptional<ItemStackHandler> handler = LazyOptional.of(() -> items);
+	private final ItemStackHandler input = createHandler();
+	private final ItemStackHandler output = createHandler();
+	private final LazyOptional<ItemStackHandler> handlerInput = LazyOptional.of(() -> input);
+	private final LazyOptional<ItemStackHandler> handlerOutput = LazyOptional.of(() -> output);
 	
 	private short burnTime = 0;
 	
-	private final String INV_TAG = "inventory";
+	private final String INPUT_TAG = "input";
+	private final String OUTPUT_TAG = "output";
 	private final String TIME_TAG = "time";
 	
 	private ItemStackHandler createHandler()
 	{
-		return new ItemStackHandler(2) {
+		return new ItemStackHandler(1) {
 			@Override
-			protected void onContentsChanged(int slot)
+			protected void onContentsChanged(final int slot)
 			{
 				markUpdate();
 			}
@@ -71,6 +75,8 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 	 */
 	public void operate(final PlayerEntity player, final Vector3d sub)
 	{
+		if (!this.hasLevel()) return;
+		
 		final Direction dir = getBlockState().getValue(GrillBlock.FACING);
 		final double axis = dir.getAxis() == Axis.X ? sub.x : sub.z;
 		final double offset = Math.abs(axis) - Math.floor(Math.abs(axis));
@@ -78,7 +84,7 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 		
 		if(((!isReverse && offset > 0.5d) || (isReverse && offset <= 0.5d)) && hasBakedItem())
 		{
-			pullItem(1, player);
+			pullItem(true, player);
 		}
 		else if((!isReverse && offset <= 0.5d) || (isReverse && offset > 0.5d))
 		{
@@ -86,19 +92,19 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 			
 			if(hasItem())
 			{
-				ItemStack item = items.getStackInSlot(0);
+				final ItemStack item = input.getStackInSlot(0);
 				
 				if(!hand.isEmpty() && item.getItem().equals(hand.getItem()) && item.getCount() < 64)
 				{
 					final ItemStack handCopy = hand.copy();
 					handCopy.setCount(1);
 					
-					items.insertItem(0, handCopy, false);
+					input.insertItem(0, handCopy, false);
 					hand.setCount(hand.getCount() - 1);
 				}
 				else
 				{
-					pullItem(0, player);
+					pullItem(false, player);
 				}
 			}
 			else if(!hand.isEmpty())
@@ -106,7 +112,7 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 				final ItemStack copy = hand.copy();
 				copy.setCount(1);
 				
-				items.insertItem(0, copy, false);
+				input.insertItem(0, copy, false);
 				
 				hand.setCount(hand.getCount() - 1);
 			}
@@ -121,10 +127,7 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 		
 		if (world.isClientSide) return;
 		
-		@SuppressWarnings("unused")
-		ServerWorld serverWorld = (ServerWorld)world;
-		
-		if(!serverWorld.isClientSide)
+		if(!world.isClientSide)
 		{
 			if(burnTime > 0)
 			{	
@@ -161,15 +164,15 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 	{
 		final IInventory inventory = new Inventory(2);
 		
-		for(int i = 0; i < items.getSlots(); i++)
-			inventory.setItem(i, items.getStackInSlot(i).copy());
+		inventory.setItem(0, getInputItem());
+		inventory.setItem(1, getOutputItem());
 		
 		return inventory;
 	}
 	
 	public ItemStack[] getItems()
 	{
-		return new ItemStack[]{ items.getStackInSlot(0), items.getStackInSlot(1) };
+		return new ItemStack[]{ getInputItem(), getOutputItem() };
 	}
 	
 	//<=================================================SERVICE=METHODS=================================================>
@@ -178,7 +181,7 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 	{
 		final IInventory inventory = new Inventory(1);
 		
-		inventory.setItem(0, items.getStackInSlot(0));
+		inventory.setItem(0, getInputItem());
 		
 		return level.getRecipeManager().getRecipeFor(ModRecipeTypes.GRILL_RECIPE, inventory, level);
 	}
@@ -187,15 +190,17 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 	{
 		final IInventory inventory = new Inventory(1);
 		
-		inventory.setItem(0, items.getStackInSlot(0));
+		inventory.setItem(0, getInputItem());
 		
 		return level.getRecipeManager().getRecipeFor(IRecipeType.CAMPFIRE_COOKING, inventory, level);
 	}
 	
 	
-	private void pullItem(final int slotIndex, final PlayerEntity player)
+	private void pullItem(final boolean isOutput, final PlayerEntity player)
 	{
-		final ItemStack item = items.extractItem(slotIndex, 64, false);
+		if (!this.hasLevel()) return;
+		
+		final ItemStack item = isOutput ? output.extractItem(0, 64, false) : input.extractItem(0, 64, false);
 		
 		if(!player.inventory.add(item))
 			InventoryHelper.dropContents(this.level, this.getBlockPos(), new Inventory(item));
@@ -206,14 +211,23 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 	
 	private boolean hasBakedItem()
 	{
-		return !items.getStackInSlot(1).isEmpty();
+		return !output.getStackInSlot(0).isEmpty();
 	}
 	
 	private boolean hasItem()
 	{
-		return !items.getStackInSlot(0).isEmpty();
+		return !input.getStackInSlot(0).isEmpty();
 	}
 	
+	private ItemStack getInputItem()
+	{
+		return input.getStackInSlot(0);
+	}
+	
+	private ItemStack getOutputItem()
+	{
+		return output.getStackInSlot(0);
+	}
 	
 	private boolean canBake()
 	{
@@ -226,7 +240,7 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 		{
 			final ItemStack result = recipe.get().getResultItem();
 			
-			sameItem = items.getStackInSlot(1).getItem().equals(result.getItem());
+			sameItem = getOutputItem().getItem().equals(result.getItem());
 			
 			hasRecipe = true;
 		}
@@ -238,14 +252,23 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 			{
 				final ItemStack result = campfireRecipe.get().getResultItem();
 				
-				sameItem = items.getStackInSlot(1).getItem().equals(result.getItem());
+				sameItem = getOutputItem().getItem().equals(result.getItem());
 				
 				if(result.getItem().isEdible())
 					hasRecipe = true;
 			}
 		}
 		
-		return level.getBlockState(worldPosition.below()).getBlock() instanceof CampfireBlock && (items.getStackInSlot(1).isEmpty() || sameItem) && hasRecipe;
+		return hasFuel() && (getOutputItem().isEmpty() || sameItem) && hasRecipe;
+	}
+	
+	private boolean hasFuel()
+	{
+		//if (!this.hasLevel()) return false;
+		
+		final Block blockUnderneath = level.getBlockState(worldPosition.below()).getBlock();
+		
+		return blockUnderneath instanceof CampfireBlock || blockUnderneath.equals(ModBlocks.HOT_HOPPER.get());
 	}
 	
 	private void bake()
@@ -254,12 +277,10 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 		
 		recipe.ifPresent(iRecipe -> 
 			{
-				final ItemStack output = iRecipe.getResultItem();
+				final ItemStack outputStack = iRecipe.getResultItem();
 				
-				items.extractItem(0, 1, false);
-				items.insertItem(1, output, false);
-				
-				setChanged();
+				input.extractItem(0, 1, false);
+				output.insertItem(0, outputStack, false);
 			});
 		
 		if(!recipe.isPresent())
@@ -268,12 +289,10 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 			
 			campfireRecipe.ifPresent(iRecipe ->
 				{
-					final ItemStack output = iRecipe.getResultItem();
+					final ItemStack outputStack = iRecipe.getResultItem();
 					
-					items.extractItem(0, 1, false);
-					items.insertItem(1, output, false);
-					
-					setChanged();
+					input.extractItem(0, 1, false);
+					output.insertItem(0, outputStack, false);
 				});
 		}
 	}
@@ -290,8 +309,14 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 		else
 			burnTime = 0;
 		
-		if (nbt.contains(INV_TAG, NBTIDs.COMPOUND)) {
-			items.deserializeNBT(nbt.getCompound(INV_TAG));;
+		if (nbt.contains(INPUT_TAG, NBTIDs.COMPOUND))
+		{
+			input.deserializeNBT(nbt.getCompound(INPUT_TAG));;
+		}
+		
+		if(nbt.contains(OUTPUT_TAG, NBTIDs.COMPOUND))
+		{
+			output.deserializeNBT(nbt.getCompound(OUTPUT_TAG));
 		}
 	}
 	
@@ -299,7 +324,8 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 	public CompoundNBT save(final CompoundNBT nbt) {
 		super.save(nbt);
 		
-		nbt.put(INV_TAG, items.serializeNBT());
+		nbt.put(INPUT_TAG, input.serializeNBT());
+		nbt.put(OUTPUT_TAG, output.serializeNBT());
 		
 		nbt.putShort(TIME_TAG, burnTime);
 		
@@ -309,10 +335,15 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 	@Override
 	public <T> LazyOptional<T> getCapability(final Capability<T> cap, final Direction side)
 	{
-		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return handler.cast();
+		if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && cap != null && side != null)
+		{
+			if(side == Direction.DOWN)
+				return handlerOutput.cast();
+			else
+				return handlerInput.cast();
 		}
-		
+			
+
 		return super.getCapability(cap, side);
 	}
 }

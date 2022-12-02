@@ -2,13 +2,13 @@ package net.agrotom.sonomod;
 
 import net.agrotom.sonomod.blocks.ModBlocks;
 import net.agrotom.sonomod.client.render.GrillTileEntityRenderer;
+import net.agrotom.sonomod.client.render.WoodenBarrelTileEntityRenderer;
+import net.agrotom.sonomod.client.render.color.ModColorBlocks;
 import net.agrotom.sonomod.data.recipes.ModRecipeTypes;
 import net.agrotom.sonomod.items.ModItems;
 import net.agrotom.sonomod.tileentity.ModTE;
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
@@ -49,7 +49,7 @@ public class SonoMod
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
         ModTE.register(eventBus);
-        
+
         ModRecipeTypes.register(eventBus);
 
         // Register ourselves for server and other game events we are interested in
@@ -66,6 +66,8 @@ public class SonoMod
     @SuppressWarnings("resource")
 	private void doClientStuff(final FMLClientSetupEvent event) {
     	ClientRegistry.bindTileEntityRenderer(ModTE.GRILL_TILEENTITY.get(), GrillTileEntityRenderer::new);
+    	ClientRegistry.bindTileEntityRenderer(ModTE.WOODEN_BARREL_TILEENTITY.get(), WoodenBarrelTileEntityRenderer::new);
+    	ModColorBlocks.register();
     	
         // do something that can only be done on the client
         //LOGGER.info("Got game settings {}", event.getMinecraftSupplier().ge);
@@ -95,10 +97,6 @@ public class SonoMod
     // Event bus for receiving Registry Events)
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
-        @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-            // register a new block here
-            LOGGER.info("HELLO from Register Block");
-        }
+    	
     }
 }

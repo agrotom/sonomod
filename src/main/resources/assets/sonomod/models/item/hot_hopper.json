@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/hopper",
+	"textures": {
+		"layer0": "sonomod:item/hot_hopper"
+	}
+}
