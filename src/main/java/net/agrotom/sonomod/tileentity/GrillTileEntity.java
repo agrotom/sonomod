@@ -15,8 +15,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CampfireCookingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.SmokingRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -186,13 +186,13 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 		return level.getRecipeManager().getRecipeFor(ModRecipeTypes.GRILL_RECIPE, inventory, level);
 	}
 	
-	private Optional<CampfireCookingRecipe> getCampfireRecipe()
+	private Optional<SmokingRecipe> getCampfireRecipe()
 	{
 		final IInventory inventory = new Inventory(1);
 		
 		inventory.setItem(0, getInputItem());
 		
-		return level.getRecipeManager().getRecipeFor(IRecipeType.CAMPFIRE_COOKING, inventory, level);
+		return level.getRecipeManager().getRecipeFor(IRecipeType.SMOKING, inventory, level);
 	}
 	
 	
@@ -246,7 +246,7 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 		}
 		else
 		{
-			final Optional<CampfireCookingRecipe> campfireRecipe = getCampfireRecipe();
+			final Optional<SmokingRecipe> campfireRecipe = getCampfireRecipe();
 			
 			if(campfireRecipe.isPresent())
 			{
@@ -277,19 +277,20 @@ public class GrillTileEntity extends AbstractTileEntity implements ITickableTile
 		
 		recipe.ifPresent(iRecipe -> 
 			{
-				final ItemStack outputStack = iRecipe.getResultItem();
+				final ItemStack outputStack = iRecipe.assemble(new Inventory(getInputItem()));
 				
 				input.extractItem(0, 1, false);
 				output.insertItem(0, outputStack, false);
 			});
+
 		
 		if(!recipe.isPresent())
 		{
-			final Optional<CampfireCookingRecipe> campfireRecipe = getCampfireRecipe();
+			final Optional<SmokingRecipe> campfireRecipe = getCampfireRecipe();
 			
 			campfireRecipe.ifPresent(iRecipe ->
 				{
-					final ItemStack outputStack = iRecipe.getResultItem();
+					final ItemStack outputStack = iRecipe.assemble(new Inventory(getInputItem()));
 					
 					input.extractItem(0, 1, false);
 					output.insertItem(0, outputStack, false);

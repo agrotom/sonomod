@@ -2,9 +2,16 @@
 	"item.sonomod.onyx": "Onyx",
 	"item.sonomod.tungsten_ingot": "Tungsten Ingot",
 	"item.sonomod.tungsten_nugget": "Tungsten Nugget",
+	"item.sonomod.maruk_scales": "Maruk Scales",
+	"item.sonomod.sunken_reptilian": "Sunken Reptilian",
+	"item.sonomod.myceplit_feather": "Myceplit Feather",
 	"block.sonomod.grill_block": "Grill",
 	"block.sonomod.onyx_ore": "Onyx Ore",
 	"block.sonomod.tungsten_ore": "Tungsten Ore",
 	"block.sonomod.wooden_barrel": "Wooden Barrel",
-	"block.sonomod.hot_hopper": "Hot Hopper"
+	"block.sonomod.hot_hopper": "Hot Hopper",
+	"entity.sonomod.reptile": "Maruk",
+	"entity.sonomod.myceplit": "Myceplit",
+	"itemGroup.material_group": "Sonomod Materials",
+	"itemGroup.combat_group": "Sonomod Combat"
 }

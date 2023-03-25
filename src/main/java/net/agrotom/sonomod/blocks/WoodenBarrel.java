@@ -1,6 +1,7 @@
 package net.agrotom.sonomod.blocks;
 
 import net.agrotom.sonomod.tileentity.WoodenBarrelTileEntity;
+import net.agrotom.sonomod.util.ATUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -94,9 +95,34 @@ public class WoodenBarrel extends Block
 	}
 	
 	@Override
+	public void onPlace(BlockState state, World level, BlockPos pos, BlockState state2,
+			boolean p_220082_5_)
+	{
+		if(!level.isClientSide)
+		{		
+			final TileEntity blockEntity = level.getBlockEntity(pos);
+			
+			if(blockEntity instanceof WoodenBarrelTileEntity)
+			{
+				((WoodenBarrelTileEntity) blockEntity).updateState();
+			}
+		}
+	}
+	
+	@Override
 	public BlockState getStateForPlacement(final BlockItemUseContext useContext)
 	{
-		return super.getStateForPlacement(useContext).setValue(FLUID_LEVEL, Integer.valueOf(0));
+		int waterLevel = 0;
+		
+		final TileEntity blockEntity = useContext.getLevel().getBlockEntity(useContext.getClickedPos().above());
+		
+		if(blockEntity instanceof WoodenBarrelTileEntity)
+		{
+			waterLevel = ((WoodenBarrelTileEntity) blockEntity).getWaterLevel();
+			ATUtils.logToAllPlayers(useContext.getLevel(), waterLevel);
+		}
+		
+		return super.getStateForPlacement(useContext).setValue(FLUID_LEVEL, Integer.valueOf(waterLevel));
 	}
 	
 	@Override

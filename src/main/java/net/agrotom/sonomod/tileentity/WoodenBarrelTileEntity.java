@@ -146,23 +146,37 @@ public class WoodenBarrelTileEntity extends AbstractTileEntity
 		return tank.getFluidAmount() >= 1000;
 	}
 	
+	public int getWaterLevel()
+	{
+		final int currentAmount = getCurrentAmount();
+		int waterLevel = (int) Math.floor(currentAmount / 1000);
+		
+		waterLevel = currentAmount > 0 && waterLevel == 0 ? 1 : waterLevel;
+		
+		return waterLevel;
+	}
+	
 	
 	//<=======================================DATA=METHODS=======================================>
 	
 	@Override
 	protected void markUpdate()
 	{
+		updateState();
+		
+		super.markUpdate();
+	}
+	
+	public void updateState()
+	{
+		if(!this.hasLevel()) return;
+		
 		if(!level.isClientSide)
 		{
-			final int currentAmount = getCurrentAmount();
-			int waterLevel = (int) Math.floor(currentAmount / 1000);
-			
-			waterLevel = currentAmount > 0 && waterLevel == 0 ? 1 : waterLevel;
+			final int waterLevel = getWaterLevel();
 			
 			if(waterLevel != getBlockState().getValue(WoodenBarrel.FLUID_LEVEL))
 				level.setBlock(worldPosition, getBlockState().setValue(WoodenBarrel.FLUID_LEVEL, waterLevel), 3);
-			
-			super.markUpdate();
 		}
 	}
 	

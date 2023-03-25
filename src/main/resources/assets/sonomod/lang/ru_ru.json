@@ -2,9 +2,16 @@
 	"item.sonomod.onyx": "Оникс",
 	"item.sonomod.tungsten_ingot": "Вольфрамовый слиток",
 	"item.sonomod.tungsten_nugget": "Вольфрамовый самородок",
+	"item.sonomod.maruk_scales": "Чешуя Марука",
+	"item.sonomod.sunken_reptilian": "Морской Гад",
+	"item.sonomod.myceplit_feather": "Перо Мицеплита",
 	"block.sonomod.grill_block": "Гриль",
 	"block.sonomod.onyx_ore": "Ониксовая руда",
 	"block.sonomod.tungsten_ore": "Вольфрамовая руда",
 	"block.sonomod.wooden_barrel": "Деревянная бочка",
-	"block.sonomod.hot_hopper": "Нагретая воронка"
+	"block.sonomod.hot_hopper": "Нагретая воронка",
+	"entity.sonomod.reptile": "Марук",
+	"entity.sonomod.myceplit": "Мицеплит",
+	"itemGroup.material_group": "Sonomod Материалы",
+	"itemGroup.combat_group": "Sonomod Бой"
 }

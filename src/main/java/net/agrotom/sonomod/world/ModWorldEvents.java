@@ -1,6 +1,7 @@
 package net.agrotom.sonomod.world;
 
 import net.agrotom.sonomod.SonoMod;
+import net.agrotom.sonomod.world.gen.ModEntityGeneration;
 import net.agrotom.sonomod.world.gen.ModOreGeneration;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -13,5 +14,6 @@ public class ModWorldEvents
 	public static void biomeLoadingEvent(final BiomeLoadingEvent event)
 	{
 		ModOreGeneration.generateOres(event);
+		ModEntityGeneration.onEntitySpawn(event);
 	}
 }

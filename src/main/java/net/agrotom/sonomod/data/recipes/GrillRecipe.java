@@ -52,13 +52,13 @@ public class GrillRecipe implements IGrillRecipe
 	@Override
 	public ItemStack assemble(IInventory inventory)
 	{
-		return output;
+		return output.copy();
 	}
 
 	@Override
 	public ItemStack getResultItem()
 	{
-		return output.copy();
+		return output;
 	}
 
 	public ItemStack getIcon()

@@ -1,10 +1,22 @@
 package net.agrotom.sonomod.events;
 
-import net.minecraftforge.fml.common.Mod;
 import net.agrotom.sonomod.SonoMod;
-import net.minecraftforge.api.distmarker.Dist;
+import net.agrotom.sonomod.entity.GimosEntity;
+import net.agrotom.sonomod.entity.ModEntityTypes;
+import net.agrotom.sonomod.entity.MyceplitEntity;
+import net.agrotom.sonomod.entity.ReptileEntity;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = SonoMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.DEDICATED_SERVER)
+@Mod.EventBusSubscriber(modid = SonoMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEvents
 {
+	@SubscribeEvent
+	public static void addEntityAttributes(EntityAttributeCreationEvent event)
+	{
+		event.put(ModEntityTypes.REPTILE.get(), ReptileEntity.setCustomAttributes().build());
+		event.put(ModEntityTypes.MYCEPLIT.get(), MyceplitEntity.setCustomAttributes().build());
+		event.put(ModEntityTypes.GIMOS.get(), GimosEntity.setCustomAttributes().build());
+	}
 }
