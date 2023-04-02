@@ -1,64 +1,94 @@
 package net.agrotom.sonomod.client.gui.interactive;
 
-import net.agrotom.sonomod.client.gui.Node;
-import net.agrotom.sonomod.util.BlitData;
+import net.agrotom.sonomod.client.gui.base.Element;
+import net.agrotom.sonomod.util.RenderEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class Label extends Node
-{
-	
-	private ITextComponent text = new StringTextComponent("Text");
-	private boolean isCentered = false;
+@OnlyIn(Dist.CLIENT)
+public class Label extends Element {
 
-	public Label(Minecraft minecraft, int posX, int posY, int width, int height)
-	{
-		super(minecraft, posX, posY, width, height);
+    protected final FontRenderer font;
+
+    private ITextComponent text = new StringTextComponent("");
+    
+    private boolean isCentered = false;
+    private boolean isWrapped = false;
+
+    @SuppressWarnings("resource")
+    public Label(ITextComponent text) {
+	this.text = text;
+
+	font = Minecraft.getInstance().font;
+
+	this.width = font.width(text.getContents());
+	this.height = font.lineHeight;
+    }
+
+    public Label(String text) {
+	this(new StringTextComponent(text).withStyle(TextFormatting.WHITE));
+    }
+
+    @Override
+    public void render(RenderEvent event) {
+	final int resultX = event.getRelativeX() + x;
+	final int resultY = event.getRelativeY() + y;
+
+	final int stretchedWidth = Math.min(width, maxWidth);
+	final int stretchedHeight = Math.min(height, maxHeight);
+
+	if (isWrapped) { 
+	    drawWrapShadow(resultX, resultY, stretchedWidth, stretchedHeight);
+	} else {
+	    if (isCentered) {
+		
+		AbstractGui.drawCenteredString(event.getMatrix(), font, text, resultX, resultY, 0);
+	    }
+	    else {
+		AbstractGui.drawString(event.getMatrix(), font, text, resultX, resultY, 0);
+	    }
 	}
-	
-	public Label(Minecraft minecraft, int posX, int posY, int width, int height, ITextComponent text)
-	{
-		this(minecraft, posX, posY, width, height);
-		this.text = text;
-	}
-	
-	@Override
-	public void blit(BlitData data)
-	{
-		if(isCentered)
-		{
-			drawCenteredString(data.getMatrix(), minecraft.font, text, data.getX(), data.getY(), text.getStyle().getColor().getValue());
-		}
-		else
-		{
-			drawString(data.getMatrix(), minecraft.font, text, data.getX(), data.getY(), text.getStyle().getColor().getValue());
-		}
+    }
+
+    public void setText(ITextComponent text) {
+	this.text = text;
+    }
+
+    public ITextComponent getText() {
+	return text;
+    }
+
+    public void setCentered(boolean isCentered) {
+	this.isCentered = isCentered;
+    }
+
+    public boolean isCentered() {
+	return isCentered;
+    }
+
+    public void setWrapped(boolean isWrapped) {
+	if (!isWrapped) {
+	    this.width = font.width(text.getContents());
+	    this.height = font.lineHeight;
 	}
 
-	public void setText(ITextComponent text)
-	{
-		this.text = text;
-	}
-	
-	public ITextComponent getText()
-	{
-		return text;
-	}
-	
-	public void enableCentered()
-	{
-		isCentered = true;
-	}
-	
-	public void disableCentered()
-	{
-		isCentered = false;
-	}
-	
-	public boolean isCentered()
-	{
-		return isCentered;
-	}
-	
+	this.isWrapped = isWrapped;
+    }
+
+    public boolean isWrapped() {
+	return isWrapped;
+    }
+    
+    private void drawWrapShadow(int x, int y, int width, int height) {
+	font.drawWordWrap(new StringTextComponent(text.getContents())
+		    .withStyle(TextFormatting.DARK_GRAY), x + 1, y + 1, width - 1, height - 1);
+	font.drawWordWrap(text, x, y, width, height);
+    }
+
 }

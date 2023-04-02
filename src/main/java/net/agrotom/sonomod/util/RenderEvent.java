@@ -2,13 +2,14 @@ package net.agrotom.sonomod.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-public class BlitData
+public class RenderEvent
 {
 
 	private MatrixStack matrix;
 	
 	private int x = 0;
 	private int y = 0;
+	
 	private int offX = 0;
 	private int offY = 0;
 	
@@ -18,9 +19,9 @@ public class BlitData
 	private int mouseX = 0;
 	private int mouseY = 0;
 	
-	public static BlitData create(MatrixStack matrix)
+	public RenderEvent(MatrixStack matrix)
 	{
-		return new BlitData().setMatrix(matrix);
+	    this.matrix = matrix;
 	}
 
 	public MatrixStack getMatrix()
@@ -28,30 +29,30 @@ public class BlitData
 		return matrix;
 	}
 
-	public BlitData setMatrix(MatrixStack matrix)
+	public RenderEvent setMatrix(MatrixStack matrix)
 	{
 		this.matrix = matrix;
 		
 		return this;
 	}
 
-	public int getX()
+	public int getRelativeX()
 	{
 		return x;
 	}
 
-	public BlitData setX(int x)
+	public RenderEvent setRelativeX(int x)
 	{
 		this.x = x;
 		return this;
 	}
 
-	public int getY()
+	public int getRelativeY()
 	{
 		return y;
 	}
 
-	public BlitData setY(int y)
+	public RenderEvent setRelativeY(int y)
 	{
 		this.y = y;
 		return this;
@@ -62,9 +63,9 @@ public class BlitData
 		return offX;
 	}
 
-	public BlitData setOffX(int offX)
+	public RenderEvent setOffX(int offX)
 	{
-		this.offX = offX;
+		this.offX = ATUtils.clampToPositive(offX);
 		
 		return this;
 	}
@@ -74,9 +75,9 @@ public class BlitData
 		return offY;
 	}
 
-	public BlitData setOffY(int offY)
+	public RenderEvent setOffY(int offY)
 	{
-		this.offY = offY;
+		this.offY = ATUtils.clampToPositive(offY);
 		
 		return this;
 	}
@@ -86,9 +87,9 @@ public class BlitData
 		return width;
 	}
 
-	public BlitData setWidth(int width)
+	public RenderEvent setWidth(int width)
 	{
-		this.width = width;
+		this.width = ATUtils.clampToPositive(width);;
 		
 		return this;
 	}
@@ -98,9 +99,9 @@ public class BlitData
 		return height;
 	}
 
-	public BlitData setHeight(int height)
+	public RenderEvent setHeight(int height)
 	{
-		this.height = height;
+		this.height = ATUtils.clampToPositive(height);
 		
 		return this;
 	}
@@ -110,7 +111,7 @@ public class BlitData
 		return mouseX;
 	}
 
-	public BlitData setMouseX(int mouseX)
+	public RenderEvent setMouseX(int mouseX)
 	{
 		this.mouseX = mouseX;
 		
@@ -122,7 +123,7 @@ public class BlitData
 		return mouseY;
 	}
 
-	public BlitData setMouseY(int mouseY)
+	public RenderEvent setMouseY(int mouseY)
 	{
 		this.mouseY = mouseY;
 		

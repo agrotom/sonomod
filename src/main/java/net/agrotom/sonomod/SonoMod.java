@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 
 import net.agrotom.sonomod.blocks.ModBlocks;
 import net.agrotom.sonomod.client.ModKeybinds;
-import net.agrotom.sonomod.client.gui.GUIBase;
 import net.agrotom.sonomod.client.render.GimosRenderer;
 import net.agrotom.sonomod.client.render.GrillTileEntityRenderer;
 import net.agrotom.sonomod.client.render.MyceplitRenderer;
@@ -19,16 +18,13 @@ import net.agrotom.sonomod.entity.GimosEntity;
 import net.agrotom.sonomod.entity.ModEntityTypes;
 import net.agrotom.sonomod.items.ModItems;
 import net.agrotom.sonomod.tileentity.ModTE;
-import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -44,6 +40,10 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class SonoMod
 {
 	public static final String MOD_ID = "sonomod";
+	public static final String BLANK = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
+		+ "Nullam euismod magna ac sapien ultricies consectetur. "
+		+ "Fusce mi metus, varius id convallis et, semper in dui. In hac habitasse platea dictumst. "
+		+ "Sed tincidunt fermentum massa porttitor auctor.";
 	
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
