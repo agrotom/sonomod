@@ -1,92 +1,97 @@
 package net.agrotom.sonomod.client.gui;
 
+import java.util.Optional;
+
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import net.agrotom.sonomod.SonoMod;
-import net.agrotom.sonomod.client.gui.containers.AnchorLayout;
-import net.agrotom.sonomod.client.gui.containers.Window;
+import net.agrotom.sonomod.client.gui.base.Element;
+import net.agrotom.sonomod.client.gui.containers.Layout;
 import net.agrotom.sonomod.client.gui.events.ActionEvent;
 import net.agrotom.sonomod.client.gui.events.HoverEvent;
 import net.agrotom.sonomod.client.gui.events.UpdateEvent;
-import net.agrotom.sonomod.client.gui.interactive.ImageHolder;
-import net.agrotom.sonomod.client.gui.interactive.Label;
+import net.agrotom.sonomod.util.RenderEvent;
+import net.agrotom.sonomod.util.RenderUtils;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class GUIBase extends Screen
-{
-	private static final ResourceLocation SKILLS_LOCATION = new ResourceLocation(SonoMod.MOD_ID, "textures/gui/skills.png");
+public abstract class GUIBase extends Screen {
+	private Layout root;
 
-	private ImageHolder imageHolder;
-	private AnchorLayout root;
-	private Window window;
-	
+	private Optional<Element> lastHoveredElement = Optional.empty();
 
-	public GUIBase(ITextComponent title)
-	{
+	protected GUIBase(ITextComponent title) {
 		super(title);
+	}
+
+	public abstract @Nonnull Layout getRootLayout();
+
+	@Override
+	public void init() {
+		root = getRootLayout();
 	}
 
 	@Override
 	public void tick() {
-	    root.onUpdate(new UpdateEvent());
+		root.onUpdate(new UpdateEvent());
 	}
-	
-	@Override
-	protected void init()
-	{
-		super.init();
-		
-		
-		final ITextComponent t = new StringTextComponent(SonoMod.BLANK).withStyle(TextFormatting.WHITE);
-		final Label l = new Label(t);
-		l.x = 50;
-		l.y = 50;
-		l.setWrapped(true);
-		
-		imageHolder = new ImageHolder(SKILLS_LOCATION);
-		imageHolder.width = 178;
-		imageHolder.height = 168;
-		
-		root = new AnchorLayout(l);
-		root.setBackground(imageHolder);
-		window = new Window(root);
-		window.setWidth(178);
-		window.setHeight(168);
-		
-		root.setOnAction(event -> {
-		    System.out.println("sfsdfsdf");
-		});
-	}
-	
+
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int id) {
-	    root.mouseAt(mouseX, mouseY).ifPresent(element -> element.onAction(new ActionEvent(mouseX, mouseY, id)));;
-	    
-	    return true;
+		root.mouseAt(mouseX, mouseY).ifPresent(element -> element.onAction(new ActionEvent(mouseX, mouseY, id)));
+
+		return true;
 	}
-	
+
 	@Override
 	public void mouseMoved(double mouseX, double mouseY) {
-	    root.mouseAt(mouseX, mouseY).ifPresent(element -> element.onHover(new HoverEvent()));
+		// System.out.println("moving mouse!");
+
+		final Optional<Element> element = root.mouseAt(mouseX, mouseY);
+		final HoverEvent event = new HoverEvent();
+
+		element.ifPresent(newElement ->
+		{
+			if (lastHoveredElement.isPresent()) {
+				if (newElement.isHovered() && lastHoveredElement.get().isHovered()) {
+					return;
+				} else {
+					lastHoveredElement.get().onExit(event);
+					newElement.onEnter(event);
+					lastHoveredElement = element;
+				}
+			} else {
+				lastHoveredElement = element;
+				newElement.onEnter(event);
+			}
+		});
+
+		if (!element.isPresent() && lastHoveredElement.isPresent()) {
+			lastHoveredElement.get().onExit(event);
+			lastHoveredElement = Optional.empty();
+		}
+
 	}
-	
+
 	@Override
-	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTick)
-	{
+	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTick) {
 		super.renderBackground(matrix);
-		window.renderAll(matrix, (width - window.getWidth()) / 2, (height - window.getHeight()) / 2, mouseX, mouseY);
+
+		int relativeX = RenderUtils.getRelativeX(width, root.getWidth());
+		int relativeY = RenderUtils.getRelativeY(height, root.getHeight());
+
+		root.setX(relativeX);
+		root.setY(relativeY);
+
+		root.render(new RenderEvent(matrix).setRelativeX(relativeX).setRelativeY(relativeY));
 	}
-	
+
 	@Override
-	public boolean isPauseScreen()
-	{
+	public boolean isPauseScreen() {
 		return false;
 	}
 

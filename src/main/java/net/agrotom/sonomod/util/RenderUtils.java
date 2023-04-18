@@ -39,4 +39,12 @@ public abstract class RenderUtils
 		    matrix.popPose();
 		}
 	}
+	
+	public static int getRelativeX(int screenWidth, int rootWidth) {
+		return (screenWidth - rootWidth) / 2;
+	}
+	
+	public static int getRelativeY(int screenHeight, int rootHeight) {
+		return (screenHeight - rootHeight) / 2;
+	}
 }

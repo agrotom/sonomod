@@ -2,7 +2,7 @@ package net.agrotom.sonomod.events;
 
 import net.agrotom.sonomod.SonoMod;
 import net.agrotom.sonomod.client.ModKeybinds;
-import net.agrotom.sonomod.client.gui.GUIBase;
+import net.agrotom.sonomod.client.gui.SkillsGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -37,7 +37,7 @@ public class InputEvents
 		{
 			if (mc.screen == null)
 			{
-				mc.setScreen(new GUIBase(new StringTextComponent("something")));
+				mc.setScreen(new SkillsGUI(new StringTextComponent("something")));
 			}
 			else
 			{

@@ -1,5 +1,7 @@
 package net.agrotom.sonomod.client.gui.interactive;
 
+import javax.annotation.Nonnull;
+
 import net.agrotom.sonomod.client.gui.base.Element;
 import net.agrotom.sonomod.util.RenderEvent;
 import net.minecraft.client.Minecraft;
@@ -12,83 +14,108 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class Label extends Element {
+public class Label extends Element
+{
 
-    protected final FontRenderer font;
+	protected final FontRenderer font;
 
-    private ITextComponent text = new StringTextComponent("");
-    
-    private boolean isCentered = false;
-    private boolean isWrapped = false;
+	private ITextComponent text = new StringTextComponent("");
 
-    @SuppressWarnings("resource")
-    public Label(ITextComponent text) {
-	this.text = text;
+	private boolean isCentered = false;
+	private boolean isWrapped = false;
 
-	font = Minecraft.getInstance().font;
+	@SuppressWarnings("resource")
+	public Label(ITextComponent text)
+	{
+		this.text = text;
 
-	this.width = font.width(text.getContents());
-	this.height = font.lineHeight;
-    }
+		font = Minecraft.getInstance().font;
 
-    public Label(String text) {
-	this(new StringTextComponent(text).withStyle(TextFormatting.WHITE));
-    }
-
-    @Override
-    public void render(RenderEvent event) {
-	final int resultX = event.getRelativeX() + x;
-	final int resultY = event.getRelativeY() + y;
-
-	final int stretchedWidth = Math.min(width, maxWidth);
-	final int stretchedHeight = Math.min(height, maxHeight);
-
-	if (isWrapped) { 
-	    drawWrapShadow(resultX, resultY, stretchedWidth, stretchedHeight);
-	} else {
-	    if (isCentered) {
-		
-		AbstractGui.drawCenteredString(event.getMatrix(), font, text, resultX, resultY, 0);
-	    }
-	    else {
-		AbstractGui.drawString(event.getMatrix(), font, text, resultX, resultY, 0);
-	    }
-	}
-    }
-
-    public void setText(ITextComponent text) {
-	this.text = text;
-    }
-
-    public ITextComponent getText() {
-	return text;
-    }
-
-    public void setCentered(boolean isCentered) {
-	this.isCentered = isCentered;
-    }
-
-    public boolean isCentered() {
-	return isCentered;
-    }
-
-    public void setWrapped(boolean isWrapped) {
-	if (!isWrapped) {
-	    this.width = font.width(text.getContents());
-	    this.height = font.lineHeight;
+		this.setWidth(font.width(text.getContents()));
+		this.setHeight(font.lineHeight);
 	}
 
-	this.isWrapped = isWrapped;
-    }
+	public Label(String text)
+	{
+		this(new StringTextComponent(text).withStyle(TextFormatting.WHITE));
+	}
 
-    public boolean isWrapped() {
-	return isWrapped;
-    }
-    
-    private void drawWrapShadow(int x, int y, int width, int height) {
-	font.drawWordWrap(new StringTextComponent(text.getContents())
-		    .withStyle(TextFormatting.DARK_GRAY), x + 1, y + 1, width - 1, height - 1);
-	font.drawWordWrap(text, x, y, width, height);
-    }
+	@Override
+	public void render(RenderEvent event)
+	{
+		final int resultX = event.getRelativeX() + this.getX();
+		final int resultY = event.getRelativeY() + this.getY();
+
+		final int stretchedWidth = Math.min(this.getWidth(), this.getMaxWidth());
+		final int stretchedHeight = Math.min(this.getHeight(), this.getMaxHeight());
+
+		if (isWrapped)
+		{
+			drawWrapShadow(resultX, resultY, stretchedWidth, stretchedHeight);
+		} else
+		{
+			if (isCentered)
+			{
+
+				AbstractGui.drawCenteredString(event.getMatrix(), font, text, resultX, resultY, 0);
+			} else
+			{
+				AbstractGui.drawString(event.getMatrix(), font, text, resultX, resultY, 0);
+			}
+		}
+	}
+	
+	private void drawWrapShadow(int x, int y, int width, int height)
+	{
+		font.drawWordWrap(new StringTextComponent(text.getContents()).withStyle(TextFormatting.DARK_GRAY), x + 1, y + 1,
+				width - 1, height - 1);
+		font.drawWordWrap(text, x, y, width, height);
+	}
+	
+	@Override
+	public String toString() {
+		return text.getContents();
+	}
+
+	public void setText(@Nonnull ITextComponent text)
+	{
+		this.text = text;
+	}
+	
+	public void setText(@Nonnull String text)
+	{
+		this.text = new StringTextComponent(text).withStyle(TextFormatting.WHITE);
+	}
+
+	public ITextComponent getText()
+	{
+		return text;
+	}
+
+	public void setCentered(boolean isCentered)
+	{
+		this.isCentered = isCentered;
+	}
+
+	public boolean isCentered()
+	{
+		return isCentered;
+	}
+
+	public void setWrapped(boolean isWrapped)
+	{
+		if (!isWrapped)
+		{
+			this.setWidth(font.width(text.getContents()));
+			this.setHeight(font.lineHeight);
+		}
+
+		this.isWrapped = isWrapped;
+	}
+
+	public boolean isWrapped()
+	{
+		return isWrapped;
+	}
 
 }

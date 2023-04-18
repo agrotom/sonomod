@@ -25,8 +25,8 @@ public class AnchorLayout extends Layout {
 	super.onUpdate(event);
 	
 	children.forEach(child -> {
-	    child.maxWidth = this.width - child.x;
-	    child.maxHeight = this.height - child.y;
+	    child.setMaxWidth(this.getWidth() - child.getX());
+	    child.setMaxHeight(this.getHeight() - child.getY());
 	});
     }
 }

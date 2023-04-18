@@ -27,17 +27,17 @@ public class FlowLayout extends Layout {
         int maxHeightInCurrentRow = 0;
         
 	for(Element child : children) {
-	    if(currentHeight >= this.height) {
+	    if(currentHeight >= this.getHeight()) {
 		break;
 	    }
 	    
-	    child.x = currentWidth;
-	    child.y = currentHeight;
+	    child.setX(currentWidth);
+	    child.setY(currentHeight);
 	    
-	    currentWidth += child.width + padding;
-	    maxHeightInCurrentRow = Math.max(maxHeightInCurrentRow, child.height);
+	    currentWidth += child.getWidth() + padding;
+	    maxHeightInCurrentRow = Math.max(maxHeightInCurrentRow, child.getHeight());
 	    
-	    if(currentWidth > this.width) {
+	    if(currentWidth > this.getWidth()) {
 		currentWidth = 0;
 		currentHeight += padding + maxHeightInCurrentRow;
 	    }
