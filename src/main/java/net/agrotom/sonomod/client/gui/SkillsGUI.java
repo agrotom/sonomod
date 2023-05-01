@@ -5,6 +5,8 @@ import net.agrotom.sonomod.client.gui.containers.AnchorLayout;
 import net.agrotom.sonomod.client.gui.containers.Layout;
 import net.agrotom.sonomod.client.gui.interactive.Button;
 import net.agrotom.sonomod.client.gui.interactive.ImageHolder;
+import net.agrotom.sonomod.client.gui.misc.Image;
+import net.agrotom.sonomod.client.gui.misc.ImageFill;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -14,6 +16,7 @@ public class SkillsGUI extends GUIBase
 	
 	private final AnchorLayout root = new AnchorLayout();
 	private Button button = new Button("Start");
+	private ImageHolder holder = new ImageHolder(new ImageFill(178, 168));
 
 	public SkillsGUI(ITextComponent title)
 	{
@@ -31,10 +34,13 @@ public class SkillsGUI extends GUIBase
 		button.setWidth(100);
 		button.setHeight(20);
 		
-		root.setWidth(256);
-		root.setHeight(256);
+		root.setWidth(178);
+		root.setHeight(168);
 		
-		root.setBackground(new ImageHolder(SKILLS_LOCATION));
+		holder.setMaxWidth(256);
+		holder.setMaxHeight(256);
+		
+		root.setBackground(holder);
 		
 		root.children.add(button);
 	}

@@ -43,6 +43,8 @@ public class Label extends Element
 	@Override
 	public void render(RenderEvent event)
 	{
+	    	super.render(event);
+	    
 		final int resultX = event.getRelativeX() + this.getX();
 		final int resultY = event.getRelativeY() + this.getY();
 

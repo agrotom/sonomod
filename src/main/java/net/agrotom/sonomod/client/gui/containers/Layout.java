@@ -20,13 +20,29 @@ public class Layout extends Element {
 	protected int padding = 5;
 
 	private Optional<ImageHolder> background = Optional.empty();
-
-	public Layout(Element... children) {
-		this.children.addAll(Arrays.asList(children));
+	
+	private void bindAllChildren() {
+	    this.children.forEach(element -> {
+		    try {
+			this.xProperty().bindTwoDirectional(element.xProperty());
+			this.yProperty().bindTwoDirectional(element.yProperty());
+			
+			this.widthProperty().bindTwoDirectional(element.widthProperty());
+			this.heightProperty().bindTwoDirectional(element.heightProperty());
+		    } catch (Exception e) {
+			e.printStackTrace();
+		    }
+		});
 	}
 
 	public Layout(List<Element> list) {
 		this.children.addAll(list);
+		
+		bindAllChildren();
+	}
+	
+	public Layout(Element... children) {
+		this(Arrays.asList(children));
 	}
 
 	@Override

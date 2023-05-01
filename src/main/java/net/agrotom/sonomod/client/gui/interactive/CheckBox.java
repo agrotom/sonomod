@@ -10,6 +10,8 @@ public class CheckBox extends InteractiveElement
 	@Override
 	public void render(RenderEvent event)
 	{
+	    	super.render(event);
+	    
 		final ElementState currentState;
 		
 		if(this.isDisabled()) {

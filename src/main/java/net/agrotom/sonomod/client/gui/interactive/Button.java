@@ -28,6 +28,8 @@ public class Button extends InteractiveElement
 	@Override
 	public void render(RenderEvent event)
 	{
+	    	super.render(event);
+	    
 		skin.render(event.getMatrix(), event.getRelativeX() + this.getX(), event.getRelativeY() + this.getY(),
 				this.getWidth(), this.getHeight(), this.getState());
 		button_label.render(event);

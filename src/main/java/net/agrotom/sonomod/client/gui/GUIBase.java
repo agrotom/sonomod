@@ -58,6 +58,7 @@ public abstract class GUIBase extends Screen {
 		{
 			if (lastHoveredElement.isPresent()) {
 				if (newElement.isHovered() && lastHoveredElement.get().isHovered()) {
+				    	newElement.onHover(event);
 					return;
 				} else {
 					lastHoveredElement.get().onExit(event);
@@ -87,7 +88,7 @@ public abstract class GUIBase extends Screen {
 		root.setX(relativeX);
 		root.setY(relativeY);
 
-		root.render(new RenderEvent(matrix).setRelativeX(relativeX).setRelativeY(relativeY));
+		root.render(new RenderEvent(matrix, relativeX, relativeY));
 	}
 
 	@Override

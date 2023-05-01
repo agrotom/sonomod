@@ -22,5 +22,8 @@ public interface IControl
 	void setOnExit(@Nullable Consumer<HoverEvent> listener);
 	void onExit(HoverEvent event);
 	
+	void setOnHover(@Nullable Consumer<HoverEvent> listener);
+	void onHover(HoverEvent event);
+	
 	boolean isHovered();
 }
