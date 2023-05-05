@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.agrotom.sonomod.blocks.ModBlocks;
+import net.agrotom.sonomod.capabilities.ModCapabilities;
 import net.agrotom.sonomod.client.ModKeybinds;
 import net.agrotom.sonomod.client.render.GimosRenderer;
 import net.agrotom.sonomod.client.render.GrillTileEntityRenderer;
@@ -16,6 +17,7 @@ import net.agrotom.sonomod.client.render.color.ModColorBlocks;
 import net.agrotom.sonomod.data.recipes.ModRecipeTypes;
 import net.agrotom.sonomod.entity.GimosEntity;
 import net.agrotom.sonomod.entity.ModEntityTypes;
+import net.agrotom.sonomod.events.ForgeEvents;
 import net.agrotom.sonomod.items.ModItems;
 import net.agrotom.sonomod.tileentity.ModTE;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
@@ -75,6 +77,8 @@ public class SonoMod
     {
     	event.enqueueWork(() ->
     	{
+    		ModCapabilities.register();
+    		MinecraftForge.EVENT_BUS.register(ForgeEvents.class);
     		EntitySpawnPlacementRegistry.register(ModEntityTypes.GIMOS.get(), PlacementType.NO_RESTRICTIONS, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, GimosEntity::checkMonsterSpawnRules);
     	});
     }

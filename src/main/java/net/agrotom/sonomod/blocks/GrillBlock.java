@@ -1,5 +1,6 @@
 package net.agrotom.sonomod.blocks;
 
+import net.agrotom.sonomod.capabilities.SkillsCapability;
 import net.agrotom.sonomod.tileentity.GrillTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -27,6 +28,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -56,6 +58,10 @@ public class GrillBlock extends Block implements IWaterLoggable
 
 		if (!level.isClientSide)
 		{
+			player.getCapability(SkillsCapability.SKILLS_HANDLER).ifPresent(cap -> {
+				player.sendMessage(new StringTextComponent(String.valueOf(cap.getSkillByName("warrior").get().getXP())), player.getUUID());
+			});
+			
 			final GrillTileEntity te = (GrillTileEntity) level.getBlockEntity(pos);
 
 			if (te != null)

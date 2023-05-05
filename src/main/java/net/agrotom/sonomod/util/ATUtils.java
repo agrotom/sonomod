@@ -1,5 +1,7 @@
 package net.agrotom.sonomod.util;
 
+import java.util.function.Consumer;
+
 import javax.annotation.Nonnull;
 
 import net.minecraft.client.Minecraft;
@@ -25,6 +27,21 @@ public class ATUtils
 	public static boolean ifMinecraftReady(@Nonnull Voider lambda) {
 		if(isMinecraftReady()) {
 			lambda.apply();
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Safe way to get Minecraft instance.
+	 * @param lambda - consumer, that accepts Minecraft instance if it's ready.
+	 * @return Minecraft is ready or not.
+	 */
+	public static boolean ifMinecraftReady(@Nonnull Consumer<Minecraft> lambda) {
+		if(isMinecraftReady()) {
+			lambda.accept(Minecraft.getInstance());
 			return true;
 		}
 		else {
