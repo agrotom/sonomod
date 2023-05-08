@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+
+import net.agrotom.sonomod.util.NBTIDs;
 import net.minecraft.nbt.CompoundNBT;
 
 public class SkillsHandler implements ISkillsHandler {
@@ -13,9 +16,11 @@ public class SkillsHandler implements ISkillsHandler {
 	 */
 	public final Map<String, ISkill> skills = new HashMap<>();
 	
-	//public final List<ISkill> skills = new ArrayList<ISkill>();
-	
-	public final ISkill warrior = new BasicSkill("warrior", skills);
+	public SkillsHandler() {
+	    ModSkills.getSkills().forEach((name, skill) -> {
+		skills.put(name, skill.copyObject());
+	    });
+	}
 
 	@Override
 	public CompoundNBT serializeNBT() {
@@ -31,17 +36,22 @@ public class SkillsHandler implements ISkillsHandler {
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(@Nonnull CompoundNBT nbt) {
 		skills.forEach((name, skill) -> {
-			if(nbt.contains(name)) {
-				skill.deserializeNBT(nbt.getCompound(name));
+			if(nbt.contains(name, NBTIDs.COMPOUND)) {
+			    skill.deserializeNBT(nbt.getCompound(name));
 			}
 		});
 	}
 	
 	@Override
-	public Optional<ISkill> getSkillByName(String skillName) {
+	public Optional<ISkill> getSkillByID(@Nonnull String skillName) {
 		return Optional.ofNullable(skills.get(skillName));
+	}
+
+	@Override
+	public void copy(@Nonnull ISkillsHandler handler) {
+	    
 	}
 
 }

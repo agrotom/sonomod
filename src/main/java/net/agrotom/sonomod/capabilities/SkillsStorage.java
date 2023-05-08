@@ -10,7 +10,7 @@ public class SkillsStorage implements Capability.IStorage<ISkillsHandler> {
 	
 	@Override
 	public INBT writeNBT(Capability<ISkillsHandler> capability, ISkillsHandler instance, Direction side) {
-		
+	    
 		return instance.serializeNBT();
 	}
 

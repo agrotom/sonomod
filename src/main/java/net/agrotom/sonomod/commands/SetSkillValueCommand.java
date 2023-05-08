@@ -12,33 +12,37 @@ import net.agrotom.sonomod.skills.BasicSkill;
 import net.agrotom.sonomod.skills.ISkill;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.text.StringTextComponent;
 
 public class SetSkillValueCommand {
 
 	public SetSkillValueCommand(CommandDispatcher<CommandSource> dispatcher) {
 		dispatcher.register(Commands.literal("sonomod").then(Commands.literal("skills")
+			.then(Commands.argument("target", EntityArgument.player())
 				.then(Commands.literal("set").then(Commands.argument("name", StringArgumentType.word())
-						.then(Commands.argument("value", FloatArgumentType.floatArg(BasicSkill.MIN_XP, BasicSkill.MAX_XP)))
+						.then(Commands.argument("value", FloatArgumentType.floatArg(BasicSkill.MIN_XP, BasicSkill.MAX_XP))
 								.executes(command -> {
-							return setSkillValue(command.getSource(), StringArgumentType.getString(command, "name"),
+							return setSkillValue(command.getSource(),
+								EntityArgument.getPlayer(command, "target"),
+								StringArgumentType.getString(command, "name"),
 									FloatArgumentType.getFloat(command, "value"));
-						})))));
+						})))))));
 	}
 	
-	private int setSkillValue(CommandSource source, String arg, float value) throws CommandSyntaxException {
-		ServerPlayerEntity player = source.getPlayerOrException();
+	private int setSkillValue(CommandSource source, ServerPlayerEntity player, String arg, float value) throws CommandSyntaxException {
+		ServerPlayerEntity sender = source.getPlayerOrException();
+		
 		player.getCapability(SkillsCapability.SKILLS_HANDLER).ifPresent(cap -> {
-			final Optional<ISkill> skillOptional = cap.getSkillByName(arg);
+			final Optional<ISkill> skillOptional = cap.getSkillByID(arg);
 			
-			if(skillOptional.isPresent()) {
-				final ISkill skill = skillOptional.get();
+			skillOptional.ifPresent(skill -> {
+			    skill.setXP(value);
 				
-				skill.setXP(value);
-			}
-			else {
-				
-			}
+			    sender.sendMessage(new StringTextComponent(player.getName().getContents() + "'s " + arg + " skill value changed to: " + value),
+				sender.getUUID());
+			});
 		});
 		
 		return 0;

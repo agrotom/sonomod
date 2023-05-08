@@ -59,7 +59,7 @@ public class GrillBlock extends Block implements IWaterLoggable
 		if (!level.isClientSide)
 		{
 			player.getCapability(SkillsCapability.SKILLS_HANDLER).ifPresent(cap -> {
-				player.sendMessage(new StringTextComponent(String.valueOf(cap.getSkillByName("warrior").get().getXP())), player.getUUID());
+				player.sendMessage(new StringTextComponent(String.valueOf(cap.getSkillByID("warrior").get().getXP())), player.getUUID());
 			});
 			
 			final GrillTileEntity te = (GrillTileEntity) level.getBlockEntity(pos);

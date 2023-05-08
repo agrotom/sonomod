@@ -14,11 +14,7 @@ public class ModEvents
 {
 	@SubscribeEvent
 	public static void addEntityAttributes(EntityAttributeCreationEvent event)
-	{
-		for(int i = 0; i <= 100; i++) {
-    		System.out.println("FIRING ATTRIBUTES");
-    	}
-		
+	{	
 		event.put(ModEntityTypes.REPTILE.get(), ReptileEntity.setCustomAttributes().build());
 		event.put(ModEntityTypes.MYCEPLIT.get(), MyceplitEntity.setCustomAttributes().build());
 		event.put(ModEntityTypes.GIMOS.get(), GimosEntity.setCustomAttributes().build());

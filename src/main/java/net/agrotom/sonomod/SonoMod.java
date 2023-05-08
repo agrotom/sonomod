@@ -48,7 +48,7 @@ public class SonoMod
 		+ "Sed tincidunt fermentum massa porttitor auctor.";
 	
     // Directly reference a log4j logger.
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger(SonoMod.MOD_ID);
 
     public SonoMod() {
         // Register the setup method for modloading
