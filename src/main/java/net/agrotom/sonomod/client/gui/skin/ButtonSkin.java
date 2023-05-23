@@ -7,7 +7,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.agrotom.sonomod.client.gui.interactive.ElementState;
 import net.agrotom.sonomod.util.ATUtils;
 import net.agrotom.sonomod.util.Vector2i;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
@@ -33,8 +32,8 @@ public class ButtonSkin implements ISkin
 	}
 	
 	public void render(@Nonnull MatrixStack matrix, int x, int y, int width, int height, @Nonnull ElementState state) {
-		if(ATUtils.isMinecraftReady()) {
-			final TextureManager manager = Minecraft.getInstance().getTextureManager();
+		ATUtils.ifMinecraftReady(minecraft -> {
+			final TextureManager manager = minecraft.getTextureManager();
 			manager.bind(image_location);
 			
 			switch(state) {
@@ -53,7 +52,7 @@ public class ButtonSkin implements ISkin
 				default:
 					break;
 			}
-		}
+		});
 	}
 	
 	private void renderCurrentState(@Nonnull MatrixStack matrix, int x, int y, int offX, int offY, int width, int height) {

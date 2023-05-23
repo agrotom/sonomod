@@ -29,21 +29,18 @@ public abstract class GUIBase extends Screen {
 	}
 
 	public abstract @Nonnull Layout getRootLayout();
-
+	
 	@Override
 	public void init() {
 		root = getRootLayout();
 	}
 
 	@Override
-	public void tick() {
-		root.onUpdate(new UpdateEvent());
-	}
-
-	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int id) {
 		root.mouseAt(mouseX, mouseY).ifPresent(element -> element.onAction(new ActionEvent(mouseX, mouseY, id)));
 
+		root.onUpdate(new UpdateEvent());
+		
 		return true;
 	}
 

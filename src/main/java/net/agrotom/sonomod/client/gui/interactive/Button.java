@@ -39,6 +39,8 @@ public class Button extends InteractiveElement
 	public void onUpdate(UpdateEvent event)
 	{
 		super.onUpdate(event);
+		
+		System.out.println("X: " + this.getX() + " and Y: " + this.getY());
 
 		stretchChildren();
 	}

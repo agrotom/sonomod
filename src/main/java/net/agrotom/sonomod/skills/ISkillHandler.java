@@ -1,14 +1,9 @@
 package net.agrotom.sonomod.skills;
 
-import net.agrotom.sonomod.util.ICopyable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public interface ISkill extends INBTSerializable<CompoundNBT>, ICopyable<ISkill> {
-	
-	String getName();
-	
-	String getUnlocalizedName();
+public interface ISkillHandler extends INBTSerializable<CompoundNBT>, IImmutableSkillHandler {
 	
 	void setXP(float amount);
 	
@@ -16,5 +11,6 @@ public interface ISkill extends INBTSerializable<CompoundNBT>, ICopyable<ISkill>
 	
 	void subXP(float amount);
 	
-	float getXP();
+	ISkillInstance getInstance();
+	
 }

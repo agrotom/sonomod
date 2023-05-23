@@ -14,6 +14,7 @@ import net.agrotom.sonomod.client.gui.interactive.IControl;
 import net.agrotom.sonomod.util.ATUtils;
 import net.agrotom.sonomod.util.RenderEvent;
 import net.agrotom.sonomod.util.Voider;
+import net.agrotom.sonomod.util.props.IProperty;
 import net.agrotom.sonomod.util.props.IntegerProperty;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
@@ -30,25 +31,41 @@ public abstract class Element implements IControl
 	public static final int MAX_VALUE = Integer.MAX_VALUE;
 	public static final int MIN_VALUE = 0;
 	
-	private final IntegerProperty x = new IntegerProperty(0);
-	private final IntegerProperty y = new IntegerProperty(0);
+	private final IProperty<Integer> x = new IntegerProperty(0);
+	private final IProperty<Integer> y = new IntegerProperty(0);
 	
 	private int prefWidth = AUTO;
 	private int prefHeight = AUTO;
 	
 	//private int width = AUTO;
 	private int maxWidth = MAX_VALUE;
+	private final IProperty<Integer> maxWidthProperty = new IntegerProperty(MAX_VALUE, newValue -> {
+		return newValue >= 0;
+	});
 	private int minWidth = MIN_VALUE;
+	private final IProperty<Integer> minWidthProperty = new IntegerProperty(MIN_VALUE, newValue -> {
+		return newValue >= 0;
+	});
 
 	//private int height = AUTO;
 	private int maxHeight = MAX_VALUE;
-	private int minHeight = MIN_VALUE;
-	
-	private final IntegerProperty width = new IntegerProperty(AUTO, newValue -> {
-	    return MathHelper.clamp(newValue, minWidth, maxWidth) == newValue;
+	private final IProperty<Integer> maxHeightProperty = new IntegerProperty(MAX_VALUE, newValue -> {
+		return newValue >= 0;
 	});
-	private final IntegerProperty height = new IntegerProperty(AUTO, newValue -> {
+	private int minHeight = MIN_VALUE;
+	private final IProperty<Integer> minHeightProperty = new IntegerProperty(MIN_VALUE, newValue -> {
+		return newValue >= 0;
+	});
+	
+	private final IProperty<Integer> widthProperty = new IntegerProperty(MIN_VALUE, newValue -> {
+	    return MathHelper.clamp(newValue, minWidth, maxWidth) == newValue;
+	}).setOnUpdate((self, caller) -> {
+		self.setValue(self.getValue()); // Updating a value according to new boundaries
+	});
+	private final IProperty<Integer> heightProperty = new IntegerProperty(MIN_VALUE, newValue -> {
 	    return MathHelper.clamp(newValue, minHeight, maxHeight) == newValue;
+	}).setOnUpdate((self, caller) -> {
+		self.setValue(self.getValue());
 	});
 
 	private Optional<Consumer<ActionEvent>> actionListener = Optional.empty();
@@ -59,9 +76,21 @@ public abstract class Element implements IControl
 	
 	private ElementState state = ElementState.USUAL;
 	
+	{
+		try {
+			maxWidthProperty.bindDependency(widthProperty);
+			minWidthProperty.bindDependency(widthProperty);
+			
+			maxHeightProperty.bindDependency(heightProperty);
+			minHeightProperty.bindDependency(heightProperty);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	protected void blit(RenderEvent event, int offX, int offY) {
 	    AbstractGui.blit(event.getMatrix(), event.getRelativeX() + x.getValue(), event.getRelativeY() + y.getValue(), offX,
-			offY, width.getValue(), height.getValue(), 256, 256);
+			offY, widthProperty.getValue(), heightProperty.getValue(), 256, 256);
 	}
 
 	public boolean ifEnabled(@Nonnull Voider lambda) {
@@ -88,8 +117,8 @@ public abstract class Element implements IControl
 
 	public Optional<Element> mouseAt(double mouseX, double mouseY)
 	{
-		if (mouseX >= x.getValue() && mouseX <= x.getValue() + width.getValue() && 
-			mouseY >= y.getValue() && mouseY <= y.getValue() + height.getValue())
+		if (mouseX >= x.getValue() && mouseX <= x.getValue() + widthProperty.getValue() && 
+			mouseY >= y.getValue() && mouseY <= y.getValue() + heightProperty.getValue())
 		{
 			return Optional.of(this);
 		}
@@ -185,20 +214,20 @@ public abstract class Element implements IControl
 		return state;
 	}
 	
-	public IntegerProperty xProperty() {
+	public IProperty<Integer> xProperty() {
 	    return x;
 	}
 	
-	public IntegerProperty yProperty() {
+	public IProperty<Integer> yProperty() {
 	    return y;
 	}
 	
-	public IntegerProperty widthProperty() {
-	    return width;
+	public IProperty<Integer> widthProperty() {
+	    return widthProperty;
 	}
 	
-	public IntegerProperty heightProperty() {
-	    return height;
+	public IProperty<Integer> heightProperty() {
+	    return heightProperty;
 	}
 
 	public int getPrefWidth() {
@@ -206,7 +235,7 @@ public abstract class Element implements IControl
 	}
 
 	public void setPrefWidth(int prefWidth) {
-	    this.prefWidth = prefWidth;
+	    this.prefWidth = ATUtils.clampToPositive(prefWidth);
 	}
 
 	public int getPrefHeight() {
@@ -214,7 +243,7 @@ public abstract class Element implements IControl
 	}
 
 	public void setPrefHeight(int prefHeight) {
-	    this.prefHeight = prefHeight;
+	    this.prefHeight = ATUtils.clampToPositive(prefHeight);
 	}
 
 	public void setX(int x) {
@@ -235,12 +264,12 @@ public abstract class Element implements IControl
 
 	public int getWidth()
 	{
-		return width.getValue();
+		return widthProperty.getValue();
 	}
 
 	public void setWidth(int width)
 	{
-		this.width.setValue(width);;
+		this.widthProperty.setValue(width);;
 	}
 
 	public int getMaxWidth()
@@ -265,12 +294,12 @@ public abstract class Element implements IControl
 
 	public int getHeight()
 	{
-		return height.getValue();
+		return heightProperty.getValue();
 	}
 
 	public void setHeight(int height)
 	{
-		this.height.setValue(height);
+		this.heightProperty.setValue(height);
 	}
 
 	public int getMaxHeight()

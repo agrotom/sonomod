@@ -1,5 +1,6 @@
 package net.agrotom.sonomod.util.props;
 
-public interface UpdateListener {
-    <T> void updated(Property<? extends T> property, T oldValue, T newValue);
+@FunctionalInterface
+public interface UpdateListener<T> {
+    void updated(IProperty<T> self, IProperty<T> caller);
 }

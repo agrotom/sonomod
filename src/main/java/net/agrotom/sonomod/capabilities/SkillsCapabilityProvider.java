@@ -2,7 +2,7 @@ package net.agrotom.sonomod.capabilities;
 
 import javax.annotation.Nonnull;
 
-import net.agrotom.sonomod.skills.ISkillsHandler;
+import net.agrotom.sonomod.skills.ISkillsCompound;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -11,10 +11,10 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class SkillsCapabilityProvider implements ICapabilitySerializable<INBT> {
-	
-	private final LazyOptional<ISkillsHandler> capability;
-	
-	private SkillsCapabilityProvider(ISkillsHandler handler) {
+
+	private final LazyOptional<ISkillsCompound> capability;
+
+	private SkillsCapabilityProvider(ISkillsCompound handler) {
 		this.capability = LazyOptional.of(() -> handler);
 	}
 
@@ -22,29 +22,29 @@ public class SkillsCapabilityProvider implements ICapabilitySerializable<INBT> {
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		return SkillsCapability.SKILLS_HANDLER.orEmpty(cap, this.capability);
 	}
-	
-	public static ICapabilityProvider createProvider(ISkillsHandler handler) {
+
+	public static ICapabilityProvider createProvider(ISkillsCompound handler) {
 		return new SkillsCapabilityProvider(handler);
 	}
 
 	@Override
 	public INBT serializeNBT() {
-	    final Capability<ISkillsHandler> cap = SkillsCapability.SKILLS_HANDLER;
-	    
-	    if(cap != null) {
-		return cap.getStorage().writeNBT(cap, capability.orElse(null), null);
-	    }
-	    
-	    return null;
+		final Capability<ISkillsCompound> cap = SkillsCapability.SKILLS_HANDLER;
+
+		if (cap != null) {
+			return cap.getStorage().writeNBT(cap, capability.orElse(null), null);
+		}
+
+		return null;
 	}
 
 	@Override
 	public void deserializeNBT(@Nonnull INBT nbt) {
-	    final Capability<ISkillsHandler> cap = SkillsCapability.SKILLS_HANDLER;
-	    
-	    if(cap != null) {
-		cap.getStorage().readNBT(cap, capability.orElse(null), null, nbt);
-	    }
+		final Capability<ISkillsCompound> cap = SkillsCapability.SKILLS_HANDLER;
+
+		if (cap != null) {
+			cap.getStorage().readNBT(cap, capability.orElse(null), null, nbt);
+		}
 	}
-	
+
 }
