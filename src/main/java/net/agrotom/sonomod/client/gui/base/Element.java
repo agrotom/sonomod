@@ -10,13 +10,11 @@ import net.agrotom.sonomod.client.gui.events.ActionEvent;
 import net.agrotom.sonomod.client.gui.events.HoverEvent;
 import net.agrotom.sonomod.client.gui.events.UpdateEvent;
 import net.agrotom.sonomod.client.gui.interactive.ElementState;
-import net.agrotom.sonomod.client.gui.interactive.IControl;
 import net.agrotom.sonomod.util.ATUtils;
 import net.agrotom.sonomod.util.RenderEvent;
 import net.agrotom.sonomod.util.Voider;
 import net.agrotom.sonomod.util.props.IProperty;
 import net.agrotom.sonomod.util.props.IntegerProperty;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.util.math.MathHelper;
@@ -24,7 +22,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class Element implements IControl
+public abstract class Element
 {
 
 	public static final int AUTO = -1;
@@ -104,9 +102,9 @@ public abstract class Element implements IControl
 	}
 	
 	public void playButtonSound(ISound sound) {
-		ATUtils.ifMinecraftReady(() -> {
+		ATUtils.ifMinecraftReady(minecraft -> {
 			this.ifEnabled(() -> {
-				Minecraft.getInstance().getSoundManager().play(sound);
+			    minecraft.getSoundManager().play(sound);
 			});
 		});
 	}
@@ -126,43 +124,36 @@ public abstract class Element implements IControl
 		return Optional.empty();
 	}
 
-	@Override
 	public boolean isHovered()
 	{
 		return state == ElementState.HOVER;
 	}
 
-	@Override
 	public void setOnAction(@Nullable Consumer<ActionEvent> listener)
 	{
 		actionListener = Optional.ofNullable(listener);
 	}
 
-	@Override
 	public void onAction(ActionEvent event)
 	{
 		actionListener.ifPresent(listener -> listener.accept(event));
 	}
 
-	@Override
 	public void setOnUpdate(@Nullable Consumer<UpdateEvent> listener)
 	{
 		updateListener = Optional.ofNullable(listener);
 	}
 
-	@Override
 	public void onUpdate(UpdateEvent event)
 	{
 		updateListener.ifPresent(listener -> listener.accept(event));
 	}
 
-	@Override
 	public void setOnEnter(@Nullable Consumer<HoverEvent> listener)
 	{
 		enterListener = Optional.ofNullable(listener);;
 	}
 	
-	@Override
 	public void onEnter(HoverEvent event) {
 		if(state != ElementState.DISABLED) {
 			state = ElementState.HOVER;
@@ -171,13 +162,11 @@ public abstract class Element implements IControl
 		enterListener.ifPresent(listener -> listener.accept(event));
 	}
 
-	@Override
 	public void setOnExit(@Nullable Consumer<HoverEvent> listener)
 	{
 		exitListener = Optional.ofNullable(listener);;
 	}
 	
-	@Override
 	public void onExit(HoverEvent event) {
 		if(state != ElementState.DISABLED) {
 			state = ElementState.USUAL;
@@ -186,12 +175,10 @@ public abstract class Element implements IControl
 		exitListener.ifPresent(listener -> listener.accept(event));
 	}
 	
-	@Override
 	public void setOnHover(Consumer<HoverEvent> listener) {
 	    hoverListener = Optional.ofNullable(listener);
 	}
 	
-	@Override
 	public void onHover(HoverEvent event) {
 	    hoverListener.ifPresent(listener -> listener.accept(event));
 	}

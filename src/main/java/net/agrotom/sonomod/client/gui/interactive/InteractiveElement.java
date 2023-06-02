@@ -9,7 +9,10 @@ import net.agrotom.sonomod.client.gui.skin.Skins;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.util.SoundEvents;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public abstract class InteractiveElement extends Element {
 
 	protected ISkin skin = Skins.DEFAULT_BUTTON_SKIN;

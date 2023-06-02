@@ -5,7 +5,10 @@ import javax.annotation.Nonnull;
 import net.agrotom.sonomod.client.gui.events.UpdateEvent;
 import net.agrotom.sonomod.util.RenderEvent;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class Button extends InteractiveElement
 {
 	private final Label button_label = new Label("");
@@ -39,8 +42,6 @@ public class Button extends InteractiveElement
 	public void onUpdate(UpdateEvent event)
 	{
 		super.onUpdate(event);
-		
-		System.out.println("X: " + this.getX() + " and Y: " + this.getY());
 
 		stretchChildren();
 	}

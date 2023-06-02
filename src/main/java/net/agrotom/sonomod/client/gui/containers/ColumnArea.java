@@ -1,4 +1,4 @@
-package net.agrotom.sonomod.client.gui.containers;
+ package net.agrotom.sonomod.client.gui.containers;
 
 import java.util.List;
 

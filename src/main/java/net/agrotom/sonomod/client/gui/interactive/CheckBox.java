@@ -2,7 +2,10 @@ package net.agrotom.sonomod.client.gui.interactive;
 
 import net.agrotom.sonomod.client.gui.events.ActionEvent;
 import net.agrotom.sonomod.util.RenderEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(Dist.CLIENT)
 public class CheckBox extends InteractiveElement
 {
 	private boolean isOn = false;
