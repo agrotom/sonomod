@@ -1,5 +1,7 @@
 package net.agrotom.sonomod.util;
 
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
@@ -8,6 +10,9 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -46,5 +51,12 @@ public abstract class RenderUtils
 	
 	public static int getRelativeY(int screenHeight, int rootHeight) {
 		return (screenHeight - rootHeight) / 2;
+	}
+	
+	public static void drawWrapShadow(@Nonnull FontRenderer font, @Nonnull ITextComponent text, int x, int y, int width, int height)
+	{
+		font.drawWordWrap(new StringTextComponent(text.getContents()).withStyle(TextFormatting.DARK_GRAY), x + 1, y + 1,
+				width - 1, height - 1);
+		font.drawWordWrap(text, x, y, width, height);
 	}
 }

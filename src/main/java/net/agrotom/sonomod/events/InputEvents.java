@@ -1,10 +1,11 @@
 package net.agrotom.sonomod.events;
 
+import javax.annotation.Nonnull;
+
 import net.agrotom.sonomod.SonoMod;
 import net.agrotom.sonomod.client.ModKeybinds;
 import net.agrotom.sonomod.client.gui.SkillsGUI;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,7 +17,7 @@ public class InputEvents
 {
 
 	@SubscribeEvent
-	public static void onKeyPress(InputEvent.KeyInputEvent event) {
+	public static void onKeyPress(@Nonnull InputEvent.KeyInputEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		
 		if (mc.level == null) return;
@@ -25,19 +26,19 @@ public class InputEvents
 	}
 	
 	@SubscribeEvent
-	public static void onMouseClick(InputEvent.MouseInputEvent event) {
+	public static void onMouseClick(@Nonnull InputEvent.MouseInputEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		
 		if (mc.level == null) return;
 	}
 	
-	private static void onInput(Minecraft mc, int key, int action)
+	private static void onInput(@Nonnull Minecraft mc, int key, int action)
 	{
 		if (ModKeybinds.openGUIKey.isDown())
 		{
 			if (mc.screen == null)
 			{
-				mc.setScreen(new SkillsGUI(new StringTextComponent("something")));
+				mc.setScreen(new SkillsGUI(mc.player));
 			}
 			else
 			{

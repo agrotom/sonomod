@@ -24,10 +24,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public abstract class Element
 {
-
 	public static final int AUTO = -1;
 	public static final int MAX_VALUE = Integer.MAX_VALUE;
-	public static final int MIN_VALUE = 0;
+	public static final int MIN_VALUE = 20;
 	
 	private final IProperty<Integer> x = new IntegerProperty(0);
 	private final IProperty<Integer> y = new IntegerProperty(0);
@@ -73,6 +72,7 @@ public abstract class Element
 	private Optional<Consumer<HoverEvent>> hoverListener = Optional.empty();
 	
 	private ElementState state = ElementState.USUAL;
+	private boolean isVisible = true;
 	
 	{
 		try {
@@ -101,7 +101,17 @@ public abstract class Element
 		}
 	}
 	
-	public void playButtonSound(ISound sound) {
+	public boolean ifVisible(@Nonnull Voider lambda) {
+		if(!isVisible) {
+			lambda.apply();
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public void playButtonSound(@Nonnull ISound sound) {
 		ATUtils.ifMinecraftReady(minecraft -> {
 			this.ifEnabled(() -> {
 			    minecraft.getSoundManager().play(sound);
@@ -180,7 +190,9 @@ public abstract class Element
 	}
 	
 	public void onHover(HoverEvent event) {
-	    hoverListener.ifPresent(listener -> listener.accept(event));
+		if(state == ElementState.HOVER) {
+			hoverListener.ifPresent(listener -> listener.accept(event));
+		}
 	}
 	
 	public void setDisabled() {
@@ -199,6 +211,14 @@ public abstract class Element
 	
 	public ElementState getState() {
 		return state;
+	}
+	
+	public boolean isVisible() {
+		return isVisible;
+	}
+	
+	public void setVisibility(boolean isVisibile) {
+		this.isVisible = isVisibile;
 	}
 	
 	public IProperty<Integer> xProperty() {

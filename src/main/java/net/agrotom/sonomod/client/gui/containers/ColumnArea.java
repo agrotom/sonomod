@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 
 import net.agrotom.sonomod.client.gui.base.Element;
 import net.agrotom.sonomod.client.gui.events.UpdateEvent;
+import net.agrotom.sonomod.util.RenderUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -42,18 +43,18 @@ public class ColumnArea extends Layout {
 		
 		if(childPrefHeight == AUTO) {
 			if(childBorderHeight > borderHeight) {
-				child.setWidth(borderHeight);
+				child.setHeight(borderHeight);
 			}
 			else {
-				child.setWidth(childBorderHeight);
+				child.setHeight(childBorderHeight);
 			}
 		}
 		else {
 			if(childPrefHeight > borderHeight) {
-				child.setWidth(borderHeight);
+				child.setHeight(borderHeight);
 			}
 			else {
-				child.setWidth(childPrefHeight);
+				child.setHeight(childPrefHeight);
 			}
 		}
 	}
@@ -77,27 +78,42 @@ public class ColumnArea extends Layout {
 		
 		final int layoutX = this.getX();
 		final int layoutY = this.getY();
-		final int layoutHeight = this.getHeight();
-		
+
 		final int padding = this.getPadding();
 		final int margin = this.getMargin();
+		
 		int currentHeight = padding;
 		
+		final int maxHeight = this.getHeight() - padding;
+		final int maxWidth = this.getWidth() - 2 * padding;
+		
 		for(final Element child : children) {
-			if(currentHeight >= layoutHeight) {
-				child.setX(OUT_OF_BOUNDS_X);
+			final Alignment layoutAlignment = getAlignment();
+			
+			final int resultX;
+			
+			if(layoutAlignment == Alignment.CENTER || layoutAlignment == Alignment.CENTER_LEFT || layoutAlignment == Alignment.CENTER_RIGHT) {
+				resultX = RenderUtils.getRelativeX(this.getWidth(), child.getWidth());
 			}
 			else {
-				final int resultX = layoutX + padding;
-				final int resultY = currentHeight + layoutY;
-				
-				child.setX(resultX);
-				child.setY(resultY);
-				
-				stretchChild(child);
-				
-				currentHeight += child.getHeight() + margin;
+				resultX = layoutX + padding;
 			}
+			 
+			final int resultY = currentHeight + layoutY;
+			
+			child.setX(resultX);
+			child.setY(resultY);
+			
+			stretchChild(child);
+			
+			if(currentHeight + child.getHeight() > maxHeight) {
+				break;
+			}
+			else if(child.getWidth() > maxWidth) {
+				continue;
+			}
+			
+			currentHeight += child.getHeight() + margin;
 		}
 	}
 

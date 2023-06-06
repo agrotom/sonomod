@@ -23,6 +23,9 @@ public abstract class GUIBase extends Screen {
 	private Layout root;
 
 	private Optional<Element> lastHoveredElement = Optional.empty();
+	
+	private int relativeX = 0;
+	private int relativeY = 0;
 
 	protected GUIBase(ITextComponent title) {
 		super(title);
@@ -37,7 +40,8 @@ public abstract class GUIBase extends Screen {
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int id) {
-		root.mouseAt(mouseX, mouseY).ifPresent(element -> element.onAction(new ActionEvent(mouseX, mouseY, id)));
+		root.mouseAt(mouseX - relativeX, mouseY - relativeY)
+			.ifPresent(element -> element.onAction(new ActionEvent(mouseX - relativeX, mouseY - relativeY, id)));
 
 		root.onUpdate(new UpdateEvent());
 		
@@ -48,7 +52,7 @@ public abstract class GUIBase extends Screen {
 	public void mouseMoved(double mouseX, double mouseY) {
 		// System.out.println("moving mouse!");
 
-		final Optional<Element> element = root.mouseAt(mouseX, mouseY);
+		final Optional<Element> element = root.mouseAt(mouseX - relativeX, mouseY - relativeY);
 		final HoverEvent event = new HoverEvent();
 
 		element.ifPresent(newElement ->
@@ -79,11 +83,8 @@ public abstract class GUIBase extends Screen {
 	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTick) {
 		super.renderBackground(matrix);
 
-		int relativeX = RenderUtils.getRelativeX(width, root.getWidth());
-		int relativeY = RenderUtils.getRelativeY(height, root.getHeight());
-
-		root.setX(relativeX);
-		root.setY(relativeY);
+		relativeX = RenderUtils.getRelativeX(width, root.getWidth());
+		relativeY = RenderUtils.getRelativeY(height, root.getHeight());
 
 		root.render(new RenderEvent(matrix, relativeX, relativeY));
 	}

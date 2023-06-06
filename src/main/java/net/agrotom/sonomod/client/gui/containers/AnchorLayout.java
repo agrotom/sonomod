@@ -14,59 +14,45 @@ import net.agrotom.sonomod.client.gui.events.UpdateEvent;
  */
 public class AnchorLayout extends Layout {
 
-    public AnchorLayout(Element... children) {
-	super(children);
-    }
-
-    public AnchorLayout(List<Element> children) {
-	super(children);
-    }
-
-    private void stretchWidth(@Nonnull Element child) {
-	int childWidth = child.getPrefWidth() == AUTO ? child.getMaxWidth() : child.getPrefWidth();
-	final int childX = child.getX();
-
-	final int computedBorderWidth = this.getWidth() - childX;
-
-	if (childWidth > computedBorderWidth) {
-	    child.setWidth(computedBorderWidth);
-	} else {
-	    child.setWidth(childWidth);
+	public AnchorLayout(Element... children) {
+		super(children);
 	}
 
-	if (childWidth > computedBorderWidth) {
-	    child.setWidth(computedBorderWidth);
-	} else {
-	    child.setWidth(childWidth);
-	}
-    }
-
-    private void stretchHeight(@Nonnull Element child) {
-	int childHeight = child.getPrefHeight() == AUTO ? child.getMaxHeight() : child.getPrefHeight();
-	final int childY = child.getY();
-
-	final int computedBorderHeight = this.getHeight() - childY;
-
-	if (childHeight > computedBorderHeight) {
-	    child.setHeight(computedBorderHeight);
-	} else {
-	    child.setHeight(childHeight);
+	public AnchorLayout(List<Element> children) {
+		super(children);
 	}
 
-	if (childHeight > computedBorderHeight) {
-	    child.setHeight(computedBorderHeight);
-	} else {
-	    child.setHeight(childHeight);
+	private void stretchWidth(@Nonnull Element child) {
+		int childWidth = child.getPrefWidth() == AUTO ? child.getMaxWidth() : child.getPrefWidth();
+
+		final int computedBorderWidth = this.getWidth();
+
+		if (childWidth > computedBorderWidth) {
+			child.setWidth(computedBorderWidth);
+		} else {
+			child.setWidth(childWidth);
+		}
 	}
-    }
 
-    @Override
-    public void onUpdate(UpdateEvent event) {
-	super.onUpdate(event);
+	private void stretchHeight(@Nonnull Element child) {
+		int childHeight = child.getPrefHeight() == AUTO ? child.getMaxHeight() : child.getPrefHeight();
 
-	children.forEach(child -> {
-	    stretchWidth(child);
-	    stretchHeight(child);
-	});
-    }
+		final int computedBorderHeight = this.getHeight();
+
+		if (childHeight > computedBorderHeight) {
+			child.setHeight(computedBorderHeight);
+		} else {
+			child.setHeight(childHeight);
+		}
+	}
+
+	@Override
+	public void onUpdate(UpdateEvent event) {
+		super.onUpdate(event);
+
+		children.forEach(child -> {
+			stretchWidth(child);
+			stretchHeight(child);
+		});
+	}
 }

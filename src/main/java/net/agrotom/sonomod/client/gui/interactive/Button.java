@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 
 import net.agrotom.sonomod.client.gui.events.UpdateEvent;
 import net.agrotom.sonomod.util.RenderEvent;
+import net.agrotom.sonomod.util.RenderUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -65,6 +66,10 @@ public class Button extends InteractiveElement
 	public void setText(@Nonnull ITextComponent text)
 	{
 		button_label.setText(text);
+	}
+	
+	public ITextComponent getText() {
+		return button_label.getText();
 	}
 
 	

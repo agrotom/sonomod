@@ -25,7 +25,9 @@ public class Layout extends Element {
 	private int padding = 0;
 	private int margin = 0;
 	
-	private StretchPolicy widthPolicy = StretchPolicy.MAX;
+	private Alignment alignment = Alignment.TOP_LEFT;
+	
+	private StretchPolicy widthPolicy = StretchPolicy.MIN;
 	private StretchPolicy heightPolicy = StretchPolicy.MIN;
 
 	private Optional<ImageHolder> background = Optional.empty();
@@ -45,7 +47,7 @@ public class Layout extends Element {
 	}
 
 	public Layout(@Nonnull List<Element> list) {
-		this.children.addAll(list);
+		this.addAllElements(list);
 
 		bindAllChildren();
 	}
@@ -61,7 +63,7 @@ public class Layout extends Element {
 		});
 
 		children.forEach(child -> {
-			if(child.getX() != OUT_OF_BOUNDS_X) {
+			if(child.isVisible()) {
 				child.render(event);
 			}
 		});
@@ -92,16 +94,20 @@ public class Layout extends Element {
 		return super.mouseAt(mouseX, mouseY);
 	}
 	
+	public void addAllElements(@Nonnull List<Element> elements) {
+		children.addAll(elements);
+		
+		this.onUpdate(new UpdateEvent());
+	}
+	
 	public void addElement(@Nonnull Element element) {
 		children.add(element);
 		
 		this.onUpdate(new UpdateEvent());
 	}
 	
-	public void addElement(@Nonnull Element... element) {
-		children.addAll(Arrays.asList(element));
-		
-		this.onUpdate(new UpdateEvent());
+	public void addAllElements(@Nonnull Element... elements) {
+		addAllElements(Arrays.asList(elements));
 	}
 	
 	public void removeElement(@Nonnull Element element) {
@@ -128,6 +134,14 @@ public class Layout extends Element {
 		this.margin = ATUtils.clampToPositive(margin);
 	}
 
+	public void setAlignment(Alignment alignment) {
+		this.alignment = alignment;
+	}
+	
+	public Alignment getAlignment() {
+		return alignment;
+	}
+	
 	public StretchPolicy getWidthPolicy() {
 		return widthPolicy;
 	}

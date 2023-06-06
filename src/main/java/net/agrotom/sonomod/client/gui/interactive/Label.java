@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 
 import net.agrotom.sonomod.client.gui.base.Element;
 import net.agrotom.sonomod.util.RenderEvent;
+import net.agrotom.sonomod.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
@@ -53,7 +54,7 @@ public class Label extends Element
 
 		if (isWrapped)
 		{
-			drawWrapShadow(resultX, resultY, stretchedWidth, stretchedHeight);
+			RenderUtils.drawWrapShadow(font, text, resultX, resultY, stretchedWidth, stretchedHeight);
 		} else
 		{
 			if (isCentered)
@@ -67,13 +68,6 @@ public class Label extends Element
 		}
 	}
 	
-	private void drawWrapShadow(int x, int y, int width, int height)
-	{
-		font.drawWordWrap(new StringTextComponent(text.getContents()).withStyle(TextFormatting.DARK_GRAY), x + 1, y + 1,
-				width - 1, height - 1);
-		font.drawWordWrap(text, x, y, width, height);
-	}
-	
 	@Override
 	public String toString() {
 		return text.getContents();
@@ -81,11 +75,13 @@ public class Label extends Element
 
 	public void setText(@Nonnull ITextComponent text)
 	{
+		setWidth(font.width(text));
 		this.text = text;
 	}
 	
 	public void setText(@Nonnull String text)
 	{
+		setWidth(font.width(text));
 		this.text = new StringTextComponent(text).withStyle(TextFormatting.WHITE);
 	}
 
@@ -93,7 +89,10 @@ public class Label extends Element
 	{
 		return text;
 	}
-
+	
+	/**
+	 * If width of label is wider 
+	 */
 	public void setCentered(boolean isCentered)
 	{
 		this.isCentered = isCentered;
