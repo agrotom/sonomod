@@ -83,8 +83,7 @@ public class SonoMod
     	});
     }
 
-    @SuppressWarnings("resource")
-	private void doClientStuff(final FMLClientSetupEvent event) {
+    private void doClientStuff(final FMLClientSetupEvent event) {
     	ClientRegistry.bindTileEntityRenderer(ModTE.GRILL_TILEENTITY.get(), GrillTileEntityRenderer::new);
     	ClientRegistry.bindTileEntityRenderer(ModTE.WOODEN_BARREL_TILEENTITY.get(), WoodenBarrelTileEntityRenderer::new);
     	ModColorBlocks.register();

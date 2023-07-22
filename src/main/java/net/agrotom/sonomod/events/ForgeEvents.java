@@ -10,9 +10,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,6 +30,19 @@ public class ForgeEvents {
 			ServerPlayerEntity player = (ServerPlayerEntity) e.getObject();
 
 			if (!player.getCapability(SkillsCapability.SKILLS_HANDLER).isPresent()) {
+				e.addCapability(new ResourceLocation(SonoMod.MOD_ID, "skills"),
+						SkillsCapabilityProvider.createProvider(new SkillsCompound()));
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onAttachCapabilitiesWorld(AttachCapabilitiesEvent<World> e) {
+
+		if (e.getObject() instanceof World) {
+			World world = (World) e.getObject();
+
+			if (!world.getCapability(SkillsCapability.SKILLS_HANDLER).isPresent()) {
 				e.addCapability(new ResourceLocation(SonoMod.MOD_ID, "skills"),
 						SkillsCapabilityProvider.createProvider(new SkillsCompound()));
 			}
@@ -51,6 +66,15 @@ public class ForgeEvents {
 				cap.copyFrom(originalCap);
 			});
 		});
+	}
+	
+	@SubscribeEvent
+	public static void onWorldTick(TickEvent.WorldTickEvent event) {
+		/*final World world = event.world;
+		
+		if (world.random.nextFloat() > 0.99F) {
+			world.getServer().getPlayerList().getPlayers().forEach(player -> player.sendMessage(null, null));
+		}*/
 	}
 
 }

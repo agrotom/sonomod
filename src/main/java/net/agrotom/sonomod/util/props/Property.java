@@ -62,10 +62,15 @@ public abstract class Property<T> extends UniqueObject implements IProperty<T> {
 		this(value);
 		this.addCondition(condition);
 	}
+	
+	public Property(T value, List<Predicate<T>> conditions) {
+		this(value);
+		this.addAllConditions(conditions);
+	}
 
 	@Override
 	public void setValue(T newValue) {
-		if ((isStrict && !and(newValue)) || (!isStrict && !or(newValue))) {
+		if (testValue(newValue)) {
 			return;
 		}
 
@@ -81,6 +86,11 @@ public abstract class Property<T> extends UniqueObject implements IProperty<T> {
 	@Override
 	public T getValue() {
 		return value;
+	}
+	
+	@Override
+	public boolean testValue(T value) {
+		return (isStrict && !and(value)) || (!isStrict && !or(value));
 	}
 
 	@Override
@@ -128,6 +138,13 @@ public abstract class Property<T> extends UniqueObject implements IProperty<T> {
 	@Override
 	public IProperty<T> addCondition(Predicate<T> condition) {
 		this.conditions.add(condition);
+
+		return this;
+	}
+	
+	@Override
+	public IProperty<T> addAllConditions(List<Predicate<T>> conditions) {
+		this.conditions.addAll(conditions);
 
 		return this;
 	}

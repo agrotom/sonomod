@@ -1,5 +1,6 @@
 package net.agrotom.sonomod.util.props;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
@@ -8,6 +9,8 @@ public interface IProperty<T> {
 	void setValue(@Nonnull T newValue);
 
 	T getValue();
+	
+	boolean testValue(@Nonnull T value);
 
 	void bindDependency(@Nonnull IProperty<T> dependency) throws Exception;
 
@@ -19,11 +22,13 @@ public interface IProperty<T> {
 	
 	IProperty<T> setOnValueChanged(@Nonnull ValueChangedListener<T> listener);
 	
-	void update(IProperty<T> caller);
+	void update(@Nonnull IProperty<T> caller);
 	
-	void onValueChanged(T oldValue, T newValue);
+	void onValueChanged(@Nonnull T oldValue, @Nonnull T newValue);
 
 	IProperty<T> addCondition(@Nonnull Predicate<T> condition);
+	
+	IProperty<T> addAllConditions(@Nonnull List<Predicate<T>> conditions);
 	
 	void setIsStrict(boolean isStrict);
 }

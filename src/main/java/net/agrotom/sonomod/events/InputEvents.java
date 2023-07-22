@@ -4,8 +4,9 @@ import javax.annotation.Nonnull;
 
 import net.agrotom.sonomod.SonoMod;
 import net.agrotom.sonomod.client.ModKeybinds;
-import net.agrotom.sonomod.client.gui.SkillsGUI;
+import net.agrotom.sonomod.client.gui.SkillsFrame;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,7 +39,7 @@ public class InputEvents
 		{
 			if (mc.screen == null)
 			{
-				mc.setScreen(new SkillsGUI(mc.player));
+				mc.setScreen(new SkillsFrame(new StringTextComponent("some")));
 			}
 			else
 			{
