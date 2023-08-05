@@ -1,10 +1,13 @@
 package net.agrotom.sonomod.client.gui.events;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.agrotom.sonomod.client.gui.Frame;
+import net.agrotom.sonomod.client.gui.elements.IElement;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -22,8 +25,10 @@ public class GUIRenderEvent extends Event {
 	
 	private final Frame frame;
 	
+	private final List<IElement> toRenderQueue;
+	
 	public GUIRenderEvent(int screenX, int screenY, @Nonnull Minecraft minecraft, @Nonnull MatrixStack matrix, int mouseX,
-			int mouseY, float partialTick, @Nonnull Frame parentFrame) {
+			int mouseY, float partialTick, @Nonnull Frame parentFrame, @Nonnull List<IElement> toRenderQueue) {
 		this.screenX = screenX;
 		this.screenY = screenY;
 		this.mc = minecraft;
@@ -32,6 +37,7 @@ public class GUIRenderEvent extends Event {
 		this.mouseY = mouseY;
 		this.partialTick = partialTick;
 		this.frame = parentFrame;
+		this.toRenderQueue = toRenderQueue;
 	}
 
 	public int getScreenX() {
@@ -67,5 +73,19 @@ public class GUIRenderEvent extends Event {
 	@Nonnull
 	public Frame getFrame() {
 		return frame;
+	}
+	
+	@Nonnull
+	public List<IElement> getQueue() {
+		return toRenderQueue;
+	}
+	
+	public static class Pre extends GUIRenderEvent {
+
+		public Pre(int screenX, int screenY, Minecraft minecraft, MatrixStack matrix, int mouseX, int mouseY,
+				float partialTick, Frame parentFrame, List<IElement> toRenderQueue) {
+			super(screenX, screenY, minecraft, matrix, mouseX, mouseY, partialTick, parentFrame, toRenderQueue);
+		}
+		
 	}
 }

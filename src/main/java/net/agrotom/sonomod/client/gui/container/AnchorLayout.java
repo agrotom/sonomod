@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import javax.annotation.Nonnull;
 
-import net.agrotom.sonomod.client.gui.ElementType;
 import net.agrotom.sonomod.client.gui.elements.IElement;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,11 +22,6 @@ public class AnchorLayout extends AbstractLayout {
 	@Override
 	public void constructLayout() {
 		
-	}
-
-	@Override
-	public ElementType<AnchorLayout> getType() {
-		return ElementType.ANCHOR_LAYOUT;
 	}
 
 }

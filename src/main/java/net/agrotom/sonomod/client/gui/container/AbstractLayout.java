@@ -9,6 +9,7 @@ import java.util.Vector;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.agrotom.sonomod.client.gui.ElementType;
 import net.agrotom.sonomod.client.gui.elements.AbstractElement;
 import net.agrotom.sonomod.client.gui.elements.IElement;
 import net.agrotom.sonomod.client.gui.style.ITexturedRect;
@@ -19,8 +20,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(value = Dist.CLIENT)
 public abstract class AbstractLayout extends AbstractElement implements ILayout {
 
-	private final List<IElement> children = new DynamicList<IElement>(new Vector<IElement>(5, 3), collection -> {
-		constructLayout();
+	private Alignment alignment = Alignment.TOP_LEFT;
+	
+	private final List<IElement> children = new DynamicList<IElement>(new Vector<IElement>(5, 3),
+		collection -> {
+			constructLayout();
 	});
 	
 	private ITexturedRect background = null;
@@ -72,6 +76,16 @@ public abstract class AbstractLayout extends AbstractElement implements ILayout 
 	}
 
 	@Override
+	public void setAlignment(@Nonnull Alignment alignment) {
+		this.alignment = alignment;
+	}
+
+	@Override
+	public Alignment getAlignment() {
+		return alignment;
+	}
+
+	@Override
 	@Nonnull
 	public List<IElement> getChildren() {
 		return children;
@@ -88,4 +102,9 @@ public abstract class AbstractLayout extends AbstractElement implements ILayout 
 		return super.at(x, y);
 	}
 
+	@Override
+	public ElementType<? extends ILayout> getType() {
+		return ElementType.LAYOUT_TYPE;
+	}
+	
 }

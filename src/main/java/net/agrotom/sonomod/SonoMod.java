@@ -19,9 +19,13 @@ import net.agrotom.sonomod.entity.GimosEntity;
 import net.agrotom.sonomod.entity.ModEntityTypes;
 import net.agrotom.sonomod.events.ForgeEvents;
 import net.agrotom.sonomod.items.ModItems;
+import net.agrotom.sonomod.network.handlers.ClientPacketHandler;
+import net.agrotom.sonomod.network.handlers.ServerPacketHandler;
+import net.agrotom.sonomod.network.packets.SkillsGUIRequestPacket;
 import net.agrotom.sonomod.tileentity.ModTE;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -36,6 +40,8 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(SonoMod.MOD_ID)
@@ -49,7 +55,14 @@ public class SonoMod
 	
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger(SonoMod.MOD_ID);
+    
+    public static SimpleChannel modChannel;
+    
+    public static final byte SKILLS_COMPOUND_MESSAGE_ID = 69;
+    public static final String MESSAGE_PROTOCOL_VERSION = "1.0";
 
+    public static final ResourceLocation modChannelRL = new ResourceLocation(MOD_ID, "modchannel");
+    
     public SonoMod() {
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -75,6 +88,17 @@ public class SonoMod
 
     private void setup(final FMLCommonSetupEvent event)
     {
+    	modChannel = NetworkRegistry.newSimpleChannel(modChannelRL, () -> MESSAGE_PROTOCOL_VERSION,
+    			ClientPacketHandler::isProtocolAccepted,
+    			ServerPacketHandler::isProtocolAccepted);
+    	
+    	modChannel.registerMessage(SKILLS_COMPOUND_MESSAGE_ID, SkillsGUIRequestPacket.class,
+    			SkillsGUIRequestPacket::encode,
+    			SkillsGUIRequestPacket::decode,
+    			ServerPacketHandler::onPacketReceived);
+    	
+    	
+    	
     	event.enqueueWork(() ->
     	{
     		ModCapabilities.register();

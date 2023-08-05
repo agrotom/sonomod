@@ -4,9 +4,8 @@ import javax.annotation.Nonnull;
 
 import net.agrotom.sonomod.SonoMod;
 import net.agrotom.sonomod.client.ModKeybinds;
-import net.agrotom.sonomod.client.gui.SkillsFrame;
+import net.agrotom.sonomod.network.packets.SkillsGUIRequestPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,32 +18,30 @@ public class InputEvents
 
 	@SubscribeEvent
 	public static void onKeyPress(@Nonnull InputEvent.KeyInputEvent event) {
-		Minecraft mc = Minecraft.getInstance();
+		final Minecraft mc = Minecraft.getInstance();
 		
-		if (mc.level == null) return;
+		if (mc.level == null) { 
+			return;
+		}
 		
 		onInput(mc, event.getKey(), event.getAction());
 	}
 	
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public static void onMouseClick(@Nonnull InputEvent.MouseInputEvent event) {
-		Minecraft mc = Minecraft.getInstance();
+		final Minecraft mc = Minecraft.getInstance();
 		
-		if (mc.level == null) return;
-	}
+		if (mc.level == null) {
+			return;
+		}
+		
+	}*/
 	
 	private static void onInput(@Nonnull Minecraft mc, int key, int action)
 	{
 		if (ModKeybinds.openGUIKey.isDown())
 		{
-			if (mc.screen == null)
-			{
-				mc.setScreen(new SkillsFrame(new StringTextComponent("some")));
-			}
-			else
-			{
-				mc.setScreen(null);
-			}
+			SonoMod.modChannel.sendToServer(new SkillsGUIRequestPacket());
 		}
 	}
 

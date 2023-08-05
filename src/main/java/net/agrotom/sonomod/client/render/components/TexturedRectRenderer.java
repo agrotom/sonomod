@@ -8,8 +8,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(value = Dist.CLIENT)
-public class TexturedRectRenderer implements IElementRenderer<TexturedRect> {
+public class TexturedRectRenderer extends AbstractElementRenderer<TexturedRect> {
 	
+	protected TexturedRectRenderer(@Nonnull ElementRendererDispatcher dispatcher) {
+		super(dispatcher);
+	}
+
 	@Override
 	public void render(@Nonnull TexturedRect element, @Nonnull GUIRenderEvent event) {
 		final int resultX = event.getScreenX() + element.getX();

@@ -30,6 +30,8 @@ public abstract class AbstractElement implements IElement {
 	
 	private ITextComponent tooltip = null;
 	
+	private boolean hidden = false;
+	private boolean disabled = false;
 	private boolean isHovered = false;
 	
 	private Consumer<GUIMouseEvent.ActionEvent> actionListener = null;
@@ -91,6 +93,36 @@ public abstract class AbstractElement implements IElement {
 		}
 		
 		return Optional.empty();
+	}
+	
+	@Override
+	public void unhide() {
+		hidden = false;
+	}
+	
+	@Override
+	public void hide() {
+		hidden = true;
+	}
+	
+	@Override
+	public boolean isHidden() {
+		return hidden;
+	}
+	
+	@Override
+	public void enable() {
+		disabled = false;
+	}
+	
+	@Override
+	public void disable() {
+		disabled = true;
+	}
+	
+	@Override
+	public boolean isDisabled() {
+		return disabled;
 	}
 	
 	@Override

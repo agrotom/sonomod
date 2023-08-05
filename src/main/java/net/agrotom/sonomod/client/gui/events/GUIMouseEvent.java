@@ -3,6 +3,7 @@ package net.agrotom.sonomod.client.gui.events;
 import javax.annotation.Nonnull;
 
 import net.agrotom.sonomod.client.gui.elements.IElement;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.Event;
@@ -10,15 +11,22 @@ import net.minecraftforge.eventbus.api.Event;
 @OnlyIn(value = Dist.CLIENT)
 public class GUIMouseEvent extends Event {
 
+	private final Minecraft minecraft;
+	
 	private final int x;
 	private final int y;
 	
 	private final IElement element;
 	
-	protected GUIMouseEvent(int x, int y, @Nonnull IElement element) {
+	protected GUIMouseEvent(@Nonnull Minecraft minecraft, int x, int y, @Nonnull IElement element) {
+		this.minecraft = minecraft;
 		this.x = x;
 		this.y = y;
 		this.element = element;
+	}
+	
+	public Minecraft getMinecraft() {
+		return minecraft;
 	}
 	
 	public int getX() {
@@ -35,32 +43,32 @@ public class GUIMouseEvent extends Event {
 
 	public static class EnterEvent extends GUIMouseEvent {
 
-		public EnterEvent(int x, int y, @Nonnull IElement element) {
-			super(x, y, element);
+		public EnterEvent(@Nonnull Minecraft minecraft, int x, int y, @Nonnull IElement element) {
+			super(minecraft, x, y, element);
 		}
 		
 	}
 	
 	public static class ExitEvent extends GUIMouseEvent {
 
-		public ExitEvent(int x, int y, @Nonnull IElement element) {
-			super(x, y, element);
+		public ExitEvent(@Nonnull Minecraft minecraft, int x, int y, @Nonnull IElement element) {
+			super(minecraft, x, y, element);
 		}
 		
 	}
 	
 	public static class HoverEvent extends GUIMouseEvent {
 		
-		public HoverEvent(int x, int y, @Nonnull IElement element) {
-			super(x, y, element);
+		public HoverEvent(@Nonnull Minecraft minecraft, int x, int y, @Nonnull IElement element) {
+			super(minecraft, x, y, element);
 		}
 		
 	}
 	
 	public static class DragEvent extends GUIMouseEvent {
 
-		public DragEvent(int x, int y, @Nonnull IElement element) {
-			super(x, y, element);
+		public DragEvent(@Nonnull Minecraft minecraft, int x, int y, @Nonnull IElement element) {
+			super(minecraft, x, y, element);
 		}
 		
 		@Override
@@ -74,8 +82,8 @@ public class GUIMouseEvent extends Event {
 
 		private final int keyID;
 		
-		public ActionEvent(int x, int y, int keyID, IElement element) {
-			super(x, y, element);
+		public ActionEvent(@Nonnull Minecraft minecraft, int x, int y, int keyID, IElement element) {
+			super(minecraft, x, y, element);
 			this.keyID = keyID;
 		}
 		

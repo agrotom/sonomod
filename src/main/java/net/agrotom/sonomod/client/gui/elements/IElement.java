@@ -38,6 +38,20 @@ public interface IElement {
 	void setTooltip(@Nullable ITextComponent tooltip);
 	Optional<ITextComponent> getTooltip();
 	
+	void unhide();
+	/**
+	 * Prevents the element to render.
+	 */
+	void hide();
+	boolean isHidden();
+	
+	void enable();
+	/**
+	 * Prevents the user to interact with that element.
+	 */
+	void disable();
+	boolean isDisabled();
+	
 	boolean isHovered();
 	                                                                     
 	void setOnMouseAction(@Nonnull Consumer<GUIMouseEvent.ActionEvent> listener);

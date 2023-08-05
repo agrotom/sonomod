@@ -16,6 +16,8 @@ public class ButtonSkin implements ISkin {
 	private int hoverOffX = 0, hoverOffY = 0;
 	private int disabledOffX = 0, disabledOffY = 0;
 	
+	private int spriteWidth = 0, spriteHeight = 0;
+	
 	private ButtonSkin() {}
 	
 	public static Builder newBuilder(@Nonnull ResourceLocation resourceLocation) {
@@ -39,7 +41,10 @@ public class ButtonSkin implements ISkin {
 	
 	private void blit(@Nonnull Minecraft minecraft, @Nonnull MatrixStack matrix, int x, int y, int width, int height,
 			boolean isHovered, boolean isDisabled, int offX, int offY) {
-		AbstractGui.blit(matrix, x, y, offX, offY, width, height, 256, 256);
+		final int halfWidth = width / 2;
+		
+		AbstractGui.blit(matrix, x, y, offX, offY, halfWidth, height, 256, 256);
+		AbstractGui.blit(matrix, x + halfWidth, y, offX + spriteWidth - halfWidth, offY, halfWidth, height, 256, 256);
 	}
 	
 	public class Builder {
@@ -65,6 +70,13 @@ public class ButtonSkin implements ISkin {
 		public Builder setDisabledOffset(int x, int y) {
 			disabledOffX = x;
 			disabledOffY = y;
+			
+			return this;
+		}
+		
+		public Builder setSpriteSize(int width, int height) {
+			ButtonSkin.this.spriteWidth = width;
+			ButtonSkin.this.spriteHeight = height;
 			
 			return this;
 		}

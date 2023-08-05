@@ -7,7 +7,10 @@ import com.google.common.collect.Maps;
 
 import net.agrotom.sonomod.client.gui.ElementType;
 import net.agrotom.sonomod.client.gui.elements.IElement;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
+@OnlyIn(value = Dist.CLIENT)
 public class ElementRendererDispatcher {
 
 	public static final ElementRendererDispatcher instance = new ElementRendererDispatcher();	
@@ -15,7 +18,10 @@ public class ElementRendererDispatcher {
 	private Map<String, IElementRenderer<?>> renderers = Maps.newHashMapWithExpectedSize(10);
 	
 	public ElementRendererDispatcher() {
-		this.registerRenderer(ElementType.TEXTURED_RECT_TYPE, new TexturedRectRenderer());
+		this.registerRenderer(ElementType.TEXTURED_RECT_TYPE, new TexturedRectRenderer(this));
+		this.registerRenderer(ElementType.BUTTON_TYPE, new ButtonRenderer(this));
+		this.registerRenderer(ElementType.LAYOUT_TYPE, new LayoutRenderer(this));
+		this.registerRenderer(ElementType.TEXT_AREA_TYPE, new TextAreaRenderer(this));
 	}
 	
 	public <T extends IElement> void registerRenderer(@Nonnull ElementType<?> type, @Nonnull IElementRenderer<T> renderer) {

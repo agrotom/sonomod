@@ -15,13 +15,18 @@ import net.agrotom.sonomod.client.gui.events.GUIRenderEvent;
 import net.agrotom.sonomod.client.render.components.ElementRendererDispatcher;
 import net.agrotom.sonomod.client.render.components.IElementRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 
 @OnlyIn(value = Dist.CLIENT)
-public abstract class Frame extends Screen {
-
+public abstract class Frame extends Screen implements INamedContainerProvider {
 	private IElement lastHoveredElement = null;
 	private int screenX = 0;
 	private int screenY = 0;
@@ -37,7 +42,7 @@ public abstract class Frame extends Screen {
 	 * @return custom root (if null, {@link net.agrotom.sonomod.client.gui.Frame#init init} method throws exception)
 	 */
 	protected abstract ILayout getRoot();
-
+	
 	public abstract void initialize();
 	
 	private void finalizeInit() {
@@ -69,7 +74,7 @@ public abstract class Frame extends Screen {
 		final int intMouseY = (int) mouseY - screenY;
 		final Optional<IElement> elementPresence = root.at(intMouseX, intMouseY);
 		
-		elementPresence.ifPresent(element -> element.mouseAction(new ActionEvent(intMouseX, intMouseY, keyID, element)));
+		elementPresence.ifPresent(element -> element.mouseAction(new ActionEvent(minecraft, intMouseX, intMouseY, keyID, element)));
 		
 		return true;
 	}
@@ -85,19 +90,28 @@ public abstract class Frame extends Screen {
 		{
 			if (lastHoveredElement != null) {
 				if (newElement.isHovered() && lastHoveredElement.isHovered()) {
-						final GUIMouseEvent.HoverEvent event = new GUIMouseEvent.HoverEvent(intMouseY, intMouseY, lastHoveredElement);
-				    	newElement.mouseHover(event);
+					final GUIMouseEvent.HoverEvent event = new GUIMouseEvent.HoverEvent(minecraft, intMouseX, intMouseY, lastHoveredElement);
+			    	newElement.mouseHover(event);
+			    	
+			    	MinecraftForge.EVENT_BUS.post(event);
 					return;
-				} else {
-					final GUIMouseEvent.ExitEvent exitEvent = new GUIMouseEvent.ExitEvent(intMouseY, intMouseY, lastHoveredElement);
-					final GUIMouseEvent.EnterEvent enterEvent = new GUIMouseEvent.EnterEvent(intMouseY, intMouseY, lastHoveredElement);
+				}
+				else {
+					final GUIMouseEvent.ExitEvent exitEvent = new GUIMouseEvent.ExitEvent(minecraft, intMouseX, intMouseY, lastHoveredElement);
+					final GUIMouseEvent.EnterEvent enterEvent = new GUIMouseEvent.EnterEvent(minecraft, intMouseX, intMouseY, newElement);
 					
 					lastHoveredElement.mouseExit(exitEvent);
 					newElement.mouseEnter(enterEvent);
 					lastHoveredElement = newElement;
+					
+					MinecraftForge.EVENT_BUS.post(exitEvent);
+					MinecraftForge.EVENT_BUS.post(enterEvent);
 				}
-			} else {
-				final GUIMouseEvent.EnterEvent event = new GUIMouseEvent.EnterEvent(intMouseY, intMouseY, lastHoveredElement);
+			}
+			else {
+				final GUIMouseEvent.EnterEvent event = new GUIMouseEvent.EnterEvent(minecraft, intMouseX, intMouseY, newElement);
+				
+				MinecraftForge.EVENT_BUS.post(event);
 				
 				lastHoveredElement = newElement;
 				newElement.mouseEnter(event);
@@ -105,7 +119,9 @@ public abstract class Frame extends Screen {
 		});
 
 		if (!elementPresence.isPresent() && lastHoveredElement != null) {
-			final GUIMouseEvent.ExitEvent event = new GUIMouseEvent.ExitEvent(intMouseY, intMouseY, lastHoveredElement);
+			final GUIMouseEvent.ExitEvent event = new GUIMouseEvent.ExitEvent(minecraft, intMouseX, intMouseY, lastHoveredElement);
+			
+			MinecraftForge.EVENT_BUS.post(event);
 			
 			lastHoveredElement.mouseExit(event);
 			lastHoveredElement = null;
@@ -114,25 +130,28 @@ public abstract class Frame extends Screen {
 	
 	@Override
 	public void render(MatrixStack matrix, int mouseX, int mouseY, float partialTick) {
+		
 		final Stack<IElement> stack = new Stack<>();
 		stack.push(root);
 		
-		final GUIRenderEvent renderEvent = new GUIRenderEvent(screenX, screenY, this.minecraft, matrix, mouseX, mouseY, partialTick, this);
+		final GUIRenderEvent renderEvent = new GUIRenderEvent(screenX, screenY, this.minecraft, matrix, mouseX, mouseY, partialTick, this, stack);
 		
 		while (!stack.isEmpty()) {
 			final IElement top = stack.pop();
 			
+			ElementRendererDispatcher.instance.get(top.getType()).render(top, renderEvent);
 			IElementRenderer.preRender(top, renderEvent);
-			
-			if (!(top instanceof ILayout)) {
-				final ElementType<?> type = top.getType();
-				final IElementRenderer<IElement> renderer = ElementRendererDispatcher.instance.get(type);
-				renderer.render(top, renderEvent);
-			}
-			else {
-				stack.addAll(top.getChildren());
-			}
 		}
+	}
+	
+	@Override
+	public ITextComponent getDisplayName() {
+		return title;
+	}
+
+	@Override
+	public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_) {
+		return null;
 	}
 
 }

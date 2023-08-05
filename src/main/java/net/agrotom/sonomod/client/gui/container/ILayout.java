@@ -2,6 +2,7 @@ package net.agrotom.sonomod.client.gui.container;
 
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.agrotom.sonomod.client.gui.elements.IElement;
@@ -20,6 +21,11 @@ public interface ILayout extends IElement {
 	
 	void setMargin(int margin);
 	int getMargin();
+	
+	void setAlignment(@Nonnull Alignment alignment);
+	@Nonnull
+	Alignment getAlignment();
+	
 	
 	void constructLayout();
 	

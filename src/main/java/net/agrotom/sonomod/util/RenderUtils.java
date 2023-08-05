@@ -56,7 +56,7 @@ public abstract class RenderUtils
 	public static void drawWrapShadow(@Nonnull FontRenderer font, @Nonnull ITextComponent text, int x, int y, int width, int height)
 	{
 		font.drawWordWrap(new StringTextComponent(text.getContents()).withStyle(TextFormatting.DARK_GRAY), x + 1, y + 1,
-				width - 1, height - 1);
+				width + 1, height + 1);
 		font.drawWordWrap(text, x, y, width, height);
 	}
 }
