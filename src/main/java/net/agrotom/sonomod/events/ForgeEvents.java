@@ -1,11 +1,15 @@
 package net.agrotom.sonomod.events;
 
+import com.mojang.brigadier.CommandDispatcher;
+
 import net.agrotom.sonomod.SonoMod;
 import net.agrotom.sonomod.capabilities.SkillsCapability;
 import net.agrotom.sonomod.capabilities.SkillsCapabilityProvider;
 import net.agrotom.sonomod.command.impl.GetSkillValueCommand;
+import net.agrotom.sonomod.command.impl.ResetSkillsCommand;
 import net.agrotom.sonomod.command.impl.SetSkillValueCommand;
-import net.agrotom.sonomod.skills.SkillsCompound;
+import net.agrotom.sonomod.skills.impl.SkillsCompound;
+import net.minecraft.command.CommandSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -51,10 +55,13 @@ public class ForgeEvents {
 
 	@SubscribeEvent
 	public static void onCommandsRegister(RegisterCommandsEvent event) {
-		new SetSkillValueCommand(event.getDispatcher());
-		GetSkillValueCommand.register(event.getDispatcher());
+		final CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
+		
+		new SetSkillValueCommand(dispatcher);
+		GetSkillValueCommand.register(dispatcher);
+		ResetSkillsCommand.register(dispatcher);
 
-		ConfigCommand.register(event.getDispatcher());
+		ConfigCommand.register(dispatcher);
 	}
 
 	@SubscribeEvent

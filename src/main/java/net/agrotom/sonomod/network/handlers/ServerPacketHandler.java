@@ -9,14 +9,15 @@ import org.apache.logging.log4j.Logger;
 
 import net.agrotom.sonomod.SonoMod;
 import net.agrotom.sonomod.capabilities.SkillsCapability;
-import net.agrotom.sonomod.client.gui.SkillsFrame;
+import net.agrotom.sonomod.inventory.container.SkillsContainerProvider;
 import net.agrotom.sonomod.network.packets.SkillsGUIRequestPacket;
-import net.agrotom.sonomod.skills.ISkillsCompound;
-import net.minecraft.entity.player.PlayerEntity;
+import net.agrotom.sonomod.network.packets.server.SSyncSkillsCapPacket;
+import net.agrotom.sonomod.util.ATUtils;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 public class ServerPacketHandler {
 	public static void onPacketReceived(@Nonnull SkillsGUIRequestPacket packet,
@@ -36,20 +37,14 @@ public class ServerPacketHandler {
 			LOGGER.error("EntityPlayerMP was null when SkillsGUIRequestPacket was received");
 		}
 		
-		final LazyOptional<ISkillsCompound> optionalCompound = sendingPlayer.getCapability(SkillsCapability.SKILLS_HANDLER);
+		SonoMod.modChannel.send(PacketDistributor.PLAYER.with(() -> sendingPlayer),
+				new SSyncSkillsCapPacket(ATUtils.getCapabilityOrException(sendingPlayer, SkillsCapability.SKILLS_HANDLER).get()));
+
+		context.enqueueWork(() -> {
+			NetworkHooks.openGui(sendingPlayer, new SkillsContainerProvider());
+		});
 		
-		if (optionalCompound.isPresent()) {
-			context.enqueueWork(() -> {
-				proccessPacket(sendingPlayer, optionalCompound.resolve().get());
-			});
-		}
-		else {
-			LOGGER.error("Player " + sendingPlayer.getName().getString() + " has no ISkillsCompund capability!");
-		}
-	}
-	
-	private static void proccessPacket(@Nonnull PlayerEntity player, @Nonnull ISkillsCompound compound) {
-		
+		context.setPacketHandled(true);
 	}
 	
 	public static boolean isProtocolAccepted(@Nonnull String protocolVersion) {

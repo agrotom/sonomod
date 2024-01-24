@@ -8,9 +8,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.agrotom.sonomod.capabilities.SkillsCapability;
 import net.agrotom.sonomod.command.arguments.SkillArgument;
-import net.agrotom.sonomod.skills.BasicSkillHandler;
 import net.agrotom.sonomod.skills.ISkillHandler;
 import net.agrotom.sonomod.skills.ISkillInstance;
+import net.agrotom.sonomod.skills.impl.BasicSkillHandler;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;

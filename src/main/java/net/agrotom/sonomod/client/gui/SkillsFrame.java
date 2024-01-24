@@ -1,38 +1,39 @@
 package net.agrotom.sonomod.client.gui;
 
-import javax.annotation.Nonnull;
-
-import net.agrotom.sonomod.SonoMod;
+import net.agrotom.sonomod.client.gui.container.Alignment;
 import net.agrotom.sonomod.client.gui.container.ColumnLayout;
 import net.agrotom.sonomod.client.gui.container.ILayout;
 import net.agrotom.sonomod.client.gui.elements.TextArea;
 import net.agrotom.sonomod.client.gui.interactive.Button;
 import net.agrotom.sonomod.client.gui.style.TexturedRect;
+import net.agrotom.sonomod.client.gui.style.image.ColorFill;
 import net.agrotom.sonomod.client.gui.style.image.ImageFile;
-import net.agrotom.sonomod.skills.ISkillsCompound;
+import net.agrotom.sonomod.inventory.container.SkillsContainer;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(value = Dist.CLIENT)
-public class SkillsFrame extends Frame {
+public class SkillsFrame extends FrameContainer<SkillsContainer> {
 	
-	private ISkillsCompound playerSkills = null;
+	private final SkillsContainer container;
 	
-	private TexturedRect backgroundTexture = new TexturedRect(
-			new ImageFile(new ResourceLocation(SonoMod.MOD_ID, "textures/gui/skills.png"), 176, 166));
+	private TexturedRect backgroundTexture = new TexturedRect(new ColorFill(64, 207));
 	
 	private Button button = new Button("1");
 	private Button button2 = new Button("2");
 	private TextArea textArea = new TextArea("SOMETHING TEXT");
-	private ColumnLayout rootLayout = new ColumnLayout(button, button2, textArea);
+	private ColumnLayout rootLayout = new ColumnLayout();
 	
-	
-	public SkillsFrame(@Nonnull ISkillsCompound compound) {
-		super(new StringTextComponent("Skills menu"));
+	public SkillsFrame(SkillsContainer container, PlayerInventory inventory,
+			ITextComponent text) {
 		
-		playerSkills = compound;
+		super(container, inventory, text);
+		
+		this.container = container;
+		
 	}
 
 	@Override
@@ -42,14 +43,31 @@ public class SkillsFrame extends Frame {
 
 	@Override
 	public void initialize() {
-		rootLayout.setBackground(backgroundTexture);
-		rootLayout.setWidth(176);
-		rootLayout.setHeight(166);
-		rootLayout.setPadding(5);
-		rootLayout.setMargin(5);
+		button.setWidth(50);
+		button2.setWidth(50);
+		textArea.setWidth(176);
 		
-		playerSkills.getSkillsUnmodifiable().forEach((key, skill) -> {
-			rootLayout.getChildren().add(new TextArea(key + ": " + skill.getXP()));
+		rootLayout.setBackground(backgroundTexture);
+		
+		rootLayout.setWidth(64);
+		rootLayout.setHeight(207);
+		rootLayout.setMargin(3);
+		
+		rootLayout.setAlignment(Alignment.CENTER);
+		
+		container.playerSkills.getSkillsUnmodifiable().forEach((key, skill) -> {
+			String[] path = key.split(":");
+			final TexturedRect icon = new TexturedRect(new ImageFile(
+					new ResourceLocation(path[0], "textures/gui/skills_icons/" 
+							+ skill.getInstance().getName() + ".png"), 32, 32));
+			
+			
+			
+			final TextArea skillInfo = new TextArea(key + ": " + skill.getXP());
+			skillInfo.setWidth(130);
+			skillInfo.setHeight(20);
+			
+			rootLayout.getChildren().add(icon);
 		});
 	}
 	

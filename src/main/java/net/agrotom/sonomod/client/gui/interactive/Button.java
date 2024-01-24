@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 
 import net.agrotom.sonomod.client.gui.ElementType;
 import net.agrotom.sonomod.client.gui.events.GUIMouseEvent.ActionEvent;
+import net.agrotom.sonomod.util.ATUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -22,6 +23,10 @@ public class Button extends InteractiveElement {
 	
 	public void setLabel(@Nonnull ITextComponent label) {
 		this.label = label;
+		
+		ATUtils.ifMinecraftReady(minecraft -> {
+			this.setHeight(minecraft.font.wordWrapHeight(label.getContents(), this.getWidth()));
+		});
 	}
 	
 	public void setLabel(@Nonnull String label) {

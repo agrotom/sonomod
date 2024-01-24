@@ -1,12 +1,18 @@
-package net.agrotom.sonomod.skills;
+package net.agrotom.sonomod.skills.impl;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 import javax.annotation.Nonnull;
 
+import net.agrotom.sonomod.skills.IImmutableSkillHandler;
+import net.agrotom.sonomod.skills.ISkillHandler;
+import net.agrotom.sonomod.skills.ISkillInstance;
+import net.agrotom.sonomod.skills.ISkillsCompound;
+import net.agrotom.sonomod.skills.ModSkills;
 import net.agrotom.sonomod.util.NBTIDs;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -78,6 +84,13 @@ public class SkillsCompound implements ISkillsCompound {
 	@Override
 	public Map<String, IImmutableSkillHandler> getSkillsUnmodifiable() {
 		return Collections.unmodifiableMap(skills);
+	}
+
+	@Override
+	public void forEach(BiConsumer<String, ISkillHandler> consumer) {
+		skills.forEach((key, skill) -> {
+			consumer.accept(key, skill);
+		});
 	}
 
 }

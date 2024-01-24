@@ -1,6 +1,8 @@
-package net.agrotom.sonomod.skills;
+package net.agrotom.sonomod.skills.impl;
 
 import javax.annotation.Nonnull;
+
+import net.agrotom.sonomod.skills.ISkillInstance;
 
 public class BasicSkillInstance implements ISkillInstance {
 

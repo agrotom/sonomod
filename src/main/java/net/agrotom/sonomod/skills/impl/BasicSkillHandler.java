@@ -1,5 +1,7 @@
-package net.agrotom.sonomod.skills;
+package net.agrotom.sonomod.skills.impl;
 
+import net.agrotom.sonomod.skills.ISkillHandler;
+import net.agrotom.sonomod.skills.ISkillInstance;
 import net.agrotom.sonomod.util.NBTIDs;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;

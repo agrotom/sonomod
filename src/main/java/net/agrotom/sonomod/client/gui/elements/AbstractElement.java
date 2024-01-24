@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.agrotom.sonomod.client.gui.container.ILayout;
 import net.agrotom.sonomod.client.gui.events.GUIMouseEvent;
 import net.agrotom.sonomod.client.gui.events.GUIUpdateEvent;
 import net.agrotom.sonomod.client.gui.events.GUIMouseEvent.ActionEvent;
@@ -40,6 +41,8 @@ public abstract class AbstractElement implements IElement {
 	private Consumer<GUIMouseEvent.DragEvent> dragListener = null;
 	private Consumer<GUIMouseEvent.HoverEvent> hoverListener = null;
 	private Consumer<GUIUpdateEvent> updateListener = null;
+	
+	private ILayout parent = null;
 	
 	@Override
 	public void setX(int x) {
@@ -209,6 +212,14 @@ public abstract class AbstractElement implements IElement {
 		if (updateListener != null) {
 			updateListener.accept(event);;
 		}
+	}
+	
+	public void setParent(@Nullable ILayout parent) {
+		this.parent = parent;
+	}
+	
+	public Optional<ILayout> getParent() {
+		return Optional.ofNullable(parent);
 	}
 	
 	@Override

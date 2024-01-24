@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.agrotom.sonomod.client.gui.ElementType;
+import net.agrotom.sonomod.client.gui.container.ILayout;
 import net.agrotom.sonomod.client.gui.events.GUIMouseEvent;
 import net.agrotom.sonomod.client.gui.events.GUIUpdateEvent;
 import net.minecraft.util.text.ITextComponent;
@@ -69,6 +70,9 @@ public interface IElement {
 	void mouseHover(@Nonnull GUIMouseEvent.HoverEvent event);
 	
 	void update(@Nonnull GUIUpdateEvent event);
+	
+	void setParent(@Nonnull ILayout parent);
+	Optional<ILayout> getParent();
 	
 	@Nonnull
 	List<IElement> getChildren();

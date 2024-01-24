@@ -44,7 +44,7 @@ public class GetSkillValueCommand {
 				sender.sendMessage(
 						new StringTextComponent(
 								player.getName().getContents() + "'s " + instance.getName() + " skill value is: " + skill.getXP()),
-						sender.getUUID()); // TODO: Translatable command output.
+						sender.getUUID());
 			});
 		});
 

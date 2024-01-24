@@ -15,18 +15,13 @@ import net.agrotom.sonomod.client.gui.events.GUIRenderEvent;
 import net.agrotom.sonomod.client.render.components.ElementRendererDispatcher;
 import net.agrotom.sonomod.client.render.components.IElementRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 
 @OnlyIn(value = Dist.CLIENT)
-public abstract class Frame extends Screen implements INamedContainerProvider {
+public abstract class Frame extends Screen {
 	private IElement lastHoveredElement = null;
 	private int screenX = 0;
 	private int screenY = 0;
@@ -142,16 +137,6 @@ public abstract class Frame extends Screen implements INamedContainerProvider {
 			ElementRendererDispatcher.instance.get(top.getType()).render(top, renderEvent);
 			IElementRenderer.preRender(top, renderEvent);
 		}
-	}
-	
-	@Override
-	public ITextComponent getDisplayName() {
-		return title;
-	}
-
-	@Override
-	public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_) {
-		return null;
 	}
 
 }

@@ -1,13 +1,16 @@
 package net.agrotom.sonomod.util;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IWorld;
+import net.minecraftforge.common.capabilities.Capability;
 
 public class ATUtils
 {
@@ -51,6 +54,17 @@ public class ATUtils
 	
 	public static boolean isMinecraftReady() {
 		return Minecraft.getInstance() != null;
+	}
+	
+	public static <T> Optional<T> getCapabilityOrException(@Nonnull PlayerEntity player, @Nonnull Capability<T> cap) {
+		T value = null;
+		try {
+			value = player.getCapability(cap).orElseThrow(() -> new Exception("Error was occured while getting cap from player"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return Optional.ofNullable(value);
 	}
 
 }

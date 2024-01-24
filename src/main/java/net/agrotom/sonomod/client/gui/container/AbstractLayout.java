@@ -23,7 +23,10 @@ public abstract class AbstractLayout extends AbstractElement implements ILayout 
 	private Alignment alignment = Alignment.TOP_LEFT;
 	
 	private final List<IElement> children = new DynamicList<IElement>(new Vector<IElement>(5, 3),
-		collection -> {
+		addedElements -> {
+			addedElements.forEach(element -> {
+				element.setParent(this);
+			});
 			constructLayout();
 	});
 	

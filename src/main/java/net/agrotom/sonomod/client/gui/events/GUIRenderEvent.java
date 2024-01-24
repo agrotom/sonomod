@@ -9,8 +9,11 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.agrotom.sonomod.client.gui.Frame;
 import net.agrotom.sonomod.client.gui.elements.IElement;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.Event;
 
+@OnlyIn(value = Dist.CLIENT)
 public class GUIRenderEvent extends Event {
 
 	private final int screenX;

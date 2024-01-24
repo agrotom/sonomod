@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import net.agrotom.sonomod.blocks.ModBlocks;
 import net.agrotom.sonomod.capabilities.ModCapabilities;
 import net.agrotom.sonomod.client.ModKeybinds;
+import net.agrotom.sonomod.client.gui.SkillsFrame;
 import net.agrotom.sonomod.client.render.GimosRenderer;
 import net.agrotom.sonomod.client.render.GrillTileEntityRenderer;
 import net.agrotom.sonomod.client.render.MyceplitRenderer;
@@ -18,11 +19,14 @@ import net.agrotom.sonomod.data.recipes.ModRecipeTypes;
 import net.agrotom.sonomod.entity.GimosEntity;
 import net.agrotom.sonomod.entity.ModEntityTypes;
 import net.agrotom.sonomod.events.ForgeEvents;
+import net.agrotom.sonomod.inventory.container.ModContainer;
 import net.agrotom.sonomod.items.ModItems;
-import net.agrotom.sonomod.network.handlers.ClientPacketHandler;
 import net.agrotom.sonomod.network.handlers.ServerPacketHandler;
 import net.agrotom.sonomod.network.packets.SkillsGUIRequestPacket;
+import net.agrotom.sonomod.network.packets.client.CSkillXPAddRequest;
+import net.agrotom.sonomod.network.packets.server.SSyncSkillsCapPacket;
 import net.agrotom.sonomod.tileentity.ModTE;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntitySpawnPlacementRegistry.PlacementType;
 import net.minecraft.util.ResourceLocation;
@@ -59,6 +63,9 @@ public class SonoMod
     public static SimpleChannel modChannel;
     
     public static final byte SKILLS_COMPOUND_MESSAGE_ID = 69;
+    public static final byte SKILLS_ADDXP_MESSAGE_ID = 70;
+    public static final byte SKILLS_SYNC_SKILLS_ID = 71;
+
     public static final String MESSAGE_PROTOCOL_VERSION = "1.0";
 
     public static final ResourceLocation modChannelRL = new ResourceLocation(MOD_ID, "modchannel");
@@ -81,6 +88,8 @@ public class SonoMod
         ModEntityTypes.register(eventBus);
 
         ModRecipeTypes.register(eventBus);
+        
+        ModContainer.register(eventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -89,13 +98,23 @@ public class SonoMod
     private void setup(final FMLCommonSetupEvent event)
     {
     	modChannel = NetworkRegistry.newSimpleChannel(modChannelRL, () -> MESSAGE_PROTOCOL_VERSION,
-    			ClientPacketHandler::isProtocolAccepted,
+    			ServerPacketHandler::isProtocolAccepted,
     			ServerPacketHandler::isProtocolAccepted);
     	
     	modChannel.registerMessage(SKILLS_COMPOUND_MESSAGE_ID, SkillsGUIRequestPacket.class,
     			SkillsGUIRequestPacket::encode,
     			SkillsGUIRequestPacket::decode,
     			ServerPacketHandler::onPacketReceived);
+    	
+    	modChannel.registerMessage(SKILLS_ADDXP_MESSAGE_ID, CSkillXPAddRequest.class,
+    			CSkillXPAddRequest::encode,
+    			CSkillXPAddRequest::decode,
+    			CSkillXPAddRequest::onPacketRecieved);
+    	
+    	modChannel.registerMessage(SKILLS_SYNC_SKILLS_ID, SSyncSkillsCapPacket.class,
+    			SSyncSkillsCapPacket::encode,
+    			SSyncSkillsCapPacket::decode,
+    			SSyncSkillsCapPacket::onPacketRecieved);
     	
     	
     	
@@ -117,6 +136,8 @@ public class SonoMod
     	RenderingRegistry.registerEntityRenderingHandler(ModEntityTypes.GIMOS.get(), GimosRenderer::new);
     	
     	ModKeybinds.register(event);
+    	
+    	ScreenManager.register(ModContainer.SKILLS_CONTAINER.get(), SkillsFrame::new);
     	
         // do something that can only be done on the client
         //LOGGER.info("Got game settings {}", event.getMinecraftSupplier().ge);

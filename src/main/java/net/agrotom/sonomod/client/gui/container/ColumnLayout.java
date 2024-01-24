@@ -27,30 +27,50 @@ public class ColumnLayout extends AbstractLayout {
 		final int padding = this.getPadding();
 		final int margin = this.getMargin();
 		
-		final int layoutXWithPadding = this.getX() + padding;
+		final int layoutX = this.getX() + padding;
+		
+		final int width = this.getWidth();
+		final Alignment.Horizontal alignmentH = this.getAlignment().posH;
+		
 		final int layoutY = this.getY();
 		
-		final int maxHeight = layoutY + this.getHeight();
+		final int maxHeight = layoutY + this.getHeight() - padding;
 		final int maxWidth = this.getWidth() - 2 * padding;
 		
-		int currentHeight = layoutY + 2 * padding - margin;
+		int currentHeight = layoutY + padding - margin;
 		
 		for (final IElement element : children) {
-			currentHeight += margin + element.getHeight() - padding;
+			final int elementHeight = element.getHeight();
+			final int elementWidth = element.getWidth();
 			
-			if (currentHeight > maxHeight) {
-				return;
-			}
+			currentHeight += margin;
 			
-			if (element.getWidth() > maxWidth) {
-				element.setWidth(maxWidth);
+			if (currentHeight + elementHeight > maxHeight) {
+				currentHeight -= margin;
 				continue;
 			}
 			
-			element.setX(layoutXWithPadding);
+			if (elementWidth > maxWidth) {
+				//element.setWidth(maxWidth);
+				continue;
+			}
+			
+			switch(alignmentH) {
+			case LEFT:
+				element.setX(layoutX);
+				break;
+			case CENTER:
+				element.setX(layoutX + width / 2 - elementWidth / 2);
+				break;
+			case RIGHT:
+				element.setX(2 * layoutX + elementWidth);
+				break;
+			}
+			
 			element.setY(currentHeight);
 			
-			currentHeight += padding;
+			currentHeight += elementHeight;
+
 		}
 	}
 

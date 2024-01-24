@@ -34,7 +34,7 @@ public class ImageFile extends AbstractImage {
 	public void blit(@Nonnull Minecraft minecraft, @Nonnull MatrixStack matrix, int x, int y) {
 		minecraft.textureManager.bind(imagePath);
 		
-		AbstractGui.blit(matrix, x, y, offX, offY, width, height, 256, 256);
+		AbstractGui.blit(matrix, x, y, offX, offY, width, height, width, height);
 	}
 
 }
